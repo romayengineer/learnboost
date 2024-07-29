@@ -5,6 +5,12 @@ import { login, getMazes, getRecalls } from "../db";
 import SideBar from "@/components/sidebar";
 import Maze from "../../components/maze";
 import { RecordModel } from "pocketbase";
+import {
+  setLocalRecalls,
+  getLocalRecalls,
+  setLocalMazes,
+  getLocalMazes,
+} from "../pbLocalStorage";
 
 export default function MazePage() {
   const [mazes, setMazes] = useState(Array<RecordModel>);
@@ -13,12 +19,30 @@ export default function MazePage() {
     var pb = login();
     const promMazes = async () => {
       console.log("DEBUG MazePage promMazes");
-      setMazes(await getMazes(pb));
+      const awaitedMazes = await getMazes(pb);
+      setMazes(awaitedMazes);
+      setLocalMazes(awaitedMazes);
+      console.log("DEBUG MazePage useEffect awaitedMazes: ", awaitedMazes);
     };
     const promRecalls = async () => {
       console.log("DEBUG MazePage promRecalls");
-      setRecalls(await getRecalls(pb));
+      const awaitedRecalls = await getRecalls(pb);
+      setRecalls(awaitedRecalls);
+      setLocalRecalls(awaitedRecalls);
+      console.log("DEBUG MazePage useEffect awaitedRecalls: ", awaitedRecalls);
     };
+    const localRecalls = getLocalRecalls();
+    setRecalls(localRecalls);
+    console.log(
+      "DEBUG MazePage useEffect: setting recalls from local ",
+      localRecalls
+    );
+    const localMazes = getLocalMazes();
+    setMazes(localMazes);
+    console.log(
+      "DEBUG MazePage useEffect: setting mazes from local ",
+      localMazes
+    );
     promMazes();
     promRecalls();
   }, []);
