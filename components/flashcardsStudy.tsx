@@ -7,22 +7,30 @@ import Client from "pocketbase";
 import { GroupedRecalls, RecallData, RecallsData } from "@/app/dbTypes";
 import { getRandomIndex, groupRecallsByFlashcardId } from "@/app/dbUtils";
 import { getHardestAndLeastTimeRecalls } from "@/app/dbUtils";
+import { Flashcard } from "@/app/dbTypes";
 
 export default function FlashcardsStudy(params: {
-  flashcards: Array<{ id: string; front: string; back: string }>;
+  flashcards: Array<Flashcard>;
 }) {
   const [pb, setPb] = useState(new Client());
-  const [randomIndex, setRandomIndex] = React.useState(
-    getRandomIndex(params.flashcards)
+  const [lastFlashcard, setLastFlashcard] = React.useState(
+    (params.flashcards.length > 0
+      ? params.flashcards[getRandomIndex(params.flashcards)]
+      : {
+          id: "",
+          front: "",
+          back: "",
+        }) as Flashcard
   );
+  if (lastFlashcard.id === "" && params.flashcards.length > 0) {
+    setLastFlashcard(params.flashcards[getRandomIndex(params.flashcards)]);
+  }
   const [flashcardCount, setFlashcardCount] = React.useState(1);
   const [groupedRecalls, setGroupedRecalls] = React.useState(
     {} as GroupedRecalls
   );
   const [recalls, setRecalls] = React.useState([] as RecallsData);
-  const flashcard = params.flashcards[randomIndex];
-  var newRandomIndex = randomIndex;
-  console.log("DEBUG FlashcardsStudy: flashcard Picked ", flashcard);
+  console.log("DEBUG FlashcardsStudy: flashcard Picked ", lastFlashcard);
   console.log("DEBUG FlashcardsStudy flashcardSSSS: ", params.flashcards);
   console.log("DEBUG FlashcardsStudy GroupedRecalls: ", groupedRecalls);
   useEffect(() => {
@@ -33,7 +41,7 @@ export default function FlashcardsStudy(params: {
       const groupedRecallsData = groupRecallsByFlashcardId(newRecalls);
       setGroupedRecalls(groupedRecallsData);
       const hardestRecalls = getHardestAndLeastTimeRecalls(groupedRecallsData);
-      console.log("DEBUG sortedRecalls: ", hardestRecalls);
+      console.log("DEBUG hardestRecalls: ", hardestRecalls);
       setRecalls(newRecalls);
     };
     setPb(newPb);
@@ -41,18 +49,16 @@ export default function FlashcardsStudy(params: {
   }, []);
   const next = (data: RecallData) => {
     // easy goes from 0 to 3
-    var newFlashcard = flashcard;
-    if (params.flashcards.length > 1) {
+    var newFlashcard = lastFlashcard;
+    if (params.flashcards.length > 0) {
       console.log("DEBUG flashcards.length > 1");
-      while (newFlashcard.id === flashcard.id) {
+      while (newFlashcard.id === lastFlashcard.id) {
         console.log("DEBUG newFlashcard == flashcard >>> true");
-        newRandomIndex = getRandomIndex(params.flashcards);
-        newFlashcard = params.flashcards[newRandomIndex];
+        newFlashcard = params.flashcards[getRandomIndex(params.flashcards)];
       }
     }
-    if (newFlashcard != flashcard) {
-      setRandomIndex(newRandomIndex);
-      console.log(`DEBUG setRandomIndex to ${newRandomIndex}`);
+    if (newFlashcard != lastFlashcard) {
+      setLastFlashcard(newFlashcard);
       setFlashcardCount((prev) => prev + 1);
       console.log("DEBUG sendRecall: ", data);
       sendRecall(
@@ -78,6 +84,9 @@ export default function FlashcardsStudy(params: {
         console.log("DEBUG newRecalls: ", newRecalls);
         const groupedRecallsData = groupRecallsByFlashcardId(newRecalls);
         setGroupedRecalls(groupedRecallsData);
+        const hardestRecalls =
+          getHardestAndLeastTimeRecalls(groupedRecallsData);
+        console.log("DEBUG hardestRecalls: ", hardestRecalls);
         return newRecalls;
       });
     }
@@ -87,9 +96,9 @@ export default function FlashcardsStudy(params: {
       <FlashcardsCounter count={flashcardCount} />
       <FlashCardHidden
         next={next}
-        id={flashcard.id}
-        front={flashcard.front}
-        back={flashcard.back}
+        id={lastFlashcard.id}
+        front={lastFlashcard.front}
+        back={lastFlashcard.back}
       />
     </main>
   );

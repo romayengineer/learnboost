@@ -1,13 +1,12 @@
 "use client";
 import { login, getFlashcards } from "@/app/db";
 import { useState, useEffect } from "react";
+import { Flashcard } from "@/app/dbTypes";
 import FlashcardsStudy from "@/components/flashcardsStudy";
 
 export default function StudyMazeID({ params }: { params: { id: string } }) {
   let mazeId = params.id;
-  const [flashcards, setFlashcards] = useState([
-    { id: "", front: "", back: "" },
-  ]);
+  const [flashcards, setFlashcards] = useState([] as Array<Flashcard>);
   useEffect(() => {
     let pb = login();
     const promFlashcards = async () => {

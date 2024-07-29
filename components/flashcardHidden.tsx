@@ -18,6 +18,8 @@ export default function FlashCardHidden(params: {
   const space = Array(119).join(".");
 
   var toggleShowBack = () => {
+    // disable show back if id is empty string
+    if (params.id === "") return;
     const newShowBack = !showBack;
     setShowBack(newShowBack);
     setFrontTimeDiff(Date.now() - startTime);
