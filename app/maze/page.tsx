@@ -1,7 +1,7 @@
 import { login, getMazes } from "../db";
-import FlashCard from "../../components/flashcard";
+import Maze from "../../components/maze";
 
-export default async function Maze() {
+export default async function MazePage() {
   var pb = await login();
   var mazes = await getMazes(pb);
   // TODO delete is for testing
@@ -12,7 +12,7 @@ export default async function Maze() {
       <br />
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
         {mazes.map((maze) => {
-          return <FlashCard mazeId={maze.id} mazeName={maze.name} />;
+          return <Maze mazeId={maze.id} mazeName={maze.name} />;
         })}
       </div>
     </main>
