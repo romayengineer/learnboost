@@ -17,3 +17,12 @@ export async function login() {
 export async function getMazes(pb: PocketBase): Promise<RecordModel[]> {
   return pb.collection("mazes").getFullList();
 }
+
+export async function getFlashcards(
+  pb: PocketBase,
+  mazeId: string
+): Promise<RecordModel[]> {
+  return pb.collection("flashcards").getFullList({
+    filter: `mazeId.id ?= "${mazeId}"`,
+  });
+}

@@ -1,4 +1,5 @@
 import { login, getMazes } from "../db";
+import Link from "next/link";
 
 export default async function Maze() {
   var pb = await login();
@@ -10,7 +11,7 @@ export default async function Maze() {
       {mazes.map((maze) => {
         return (
           <div className="p-6 bg-cyan-300 max-w-sm rounded overflow-hidden shadow-lg">
-            {maze.name}
+            <Link href={`/maze/${maze.id}`}>{maze.name}</Link>
           </div>
         );
       })}
