@@ -78,6 +78,6 @@ export function sendRecall(
 }
 
 // TODO filter by day
-export function getRecall(pb: PocketBase): Promise<RecordModel[]> {
+export function getRecalls(pb: PocketBase): Promise<RecordModel[]> {
   return pb.collection("recalls").getFullList();
 }

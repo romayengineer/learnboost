@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { login, getMazes, getRecall } from "../db";
+import { login, getMazes, getRecalls } from "../db";
 
 import SideBar from "@/components/sidebar";
 import Maze from "../../components/maze";
@@ -17,7 +17,7 @@ export default function MazePage() {
     };
     const promRecalls = async () => {
       console.log("getRecall");
-      setRecalls(await getRecall(pb));
+      setRecalls(await getRecalls(pb));
     };
     promMazes();
     promRecalls();

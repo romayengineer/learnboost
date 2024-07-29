@@ -2,8 +2,29 @@
 import React, { useEffect, useState } from "react";
 import FlashCardHidden from "@/components/flashcardHidden";
 import FlashcardsCounter from "./flashcardsCounter";
-import { login, sendRecall } from "@/app/db";
+import { getRecalls, login, sendRecall } from "@/app/db";
 import Client from "pocketbase";
+
+function groupRecallsByFlashcardId(
+  recalls: Array<{
+    flashcardId: string;
+    timeFront: number;
+    timeBack: number;
+    easy: number;
+  }>
+): { [id: string]: { totalTime: number; totalEasy: number } } {
+  var newRecalls: { [id: string]: { totalTime: number; totalEasy: number } } =
+    {};
+  recalls.forEach((recall) => {
+    const prevVal = newRecalls[recall.flashcardId] || {};
+    newRecalls[recall.flashcardId] = {
+      totalTime: (prevVal.totalTime || 0) + recall.timeBack,
+      totalEasy: (prevVal.totalEasy || 0) + recall.easy,
+    };
+  });
+  console.log("DEBUG groupRecallsByFlashcardId: ", newRecalls);
+  return newRecalls;
+}
 
 export default function FlashcardsStudy(params: {
   flashcards: Array<{ id: string; front: string; back: string }>;
@@ -14,12 +35,33 @@ export default function FlashcardsStudy(params: {
   };
   const [randomIndex, setRandomIndex] = React.useState(getRandomIndex());
   const [flashcardCount, setFlashcardCount] = React.useState(1);
+  const [recalls, setRecalls] = React.useState(
+    [] as Array<{
+      flashcardId: string;
+      timeFront: number;
+      timeBack: number;
+      easy: number;
+    }>
+  );
   const flashcard = params.flashcards[randomIndex];
   var newRandomIndex = randomIndex;
   console.log("DEBUG FlashcardsStudy: flashcard Picked ", flashcard);
   console.log("DEBUG FlashcardsStudy flashcardSSSS: ", params.flashcards);
   useEffect(() => {
-    setPb(login());
+    const newPb = login();
+    const primRecalls = async () => {
+      const newRecalls = (await getRecalls(newPb)) as unknown as Array<{
+        flashcardId: string;
+        timeFront: number;
+        timeBack: number;
+        easy: number;
+      }>;
+      console.log("DEBUG newRecalls: ", newRecalls);
+      groupRecallsByFlashcardId(newRecalls);
+      setRecalls(newRecalls);
+    };
+    setPb(newPb);
+    primRecalls();
   }, []);
   const next = (
     easy: number,
