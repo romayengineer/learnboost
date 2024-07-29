@@ -16,7 +16,13 @@ export default function MazeFlashcards(params: {
       </a>
       <div className="mt-6 grid gap-4 rid-cols-1 sm:grid-cols-2 md:grid-cols-3">
         {flashcards.map((flashcard) => {
-          return <FlashCard front={flashcard.front} back={flashcard.back} />;
+          return (
+            <FlashCard
+              key={Math.round(1000 * Math.random())}
+              front={flashcard.front}
+              back={flashcard.back}
+            />
+          );
         })}
       </div>
     </div>

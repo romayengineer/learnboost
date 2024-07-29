@@ -1,11 +1,11 @@
 import PocketBase, { RecordModel } from "pocketbase";
 
 export async function login() {
-  const pb = new PocketBase(process.env.POCKETBASE_URL);
+  const pb = new PocketBase(process.env.NEXT_PUBLIC_PB_URL);
 
   await pb.admins.authWithPassword(
-    process.env.DB_USER_NAME!,
-    process.env.DB_PASSWORD!,
+    process.env.NEXT_PUBLIC_DB_USER_NAME!,
+    process.env.NEXT_PUBLIC_DB_PASSWORD!,
     {
       cache: "no-store",
     }

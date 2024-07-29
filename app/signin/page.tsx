@@ -2,7 +2,7 @@ export default function Home() {
   return (
     <main>
       <div className="min-h-screen flex flex-row justify-center">
-        <form action="javascript:void(0);">
+        <form>
           <div style={{ height: "150px" }}></div>
           <h1 className="text-2xl mb-4">Login</h1>
           <input

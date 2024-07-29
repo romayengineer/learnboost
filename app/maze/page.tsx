@@ -16,7 +16,13 @@ export default async function MazePage() {
         <br />
         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
           {mazes.map((maze) => {
-            return <Maze mazeId={maze.id} mazeName={maze.name} />;
+            return (
+              <Maze
+                key={maze.id + Math.round(100 * Math.random())}
+                mazeId={maze.id}
+                mazeName={maze.name}
+              />
+            );
           })}
         </div>
       </div>

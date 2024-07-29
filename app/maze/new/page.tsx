@@ -5,10 +5,7 @@ export default function NewMaze() {
     <main>
       <SideBar />
       <div className="p-10">
-        <form
-          className="bg-sky-300 inline-block pt-10 pl-10 pr-10 pb-6 rounded-3xl"
-          action="javascript:void(0);"
-        >
+        <form className="bg-sky-300 inline-block pt-10 pl-10 pr-10 pb-6 rounded-3xl">
           <div className="pb-4">
             <h1 className="text-2xl">Create a new Maze!</h1>
             <br />
