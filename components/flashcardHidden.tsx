@@ -20,7 +20,7 @@ export default function FlashCardHidden(params: {
   return (
     <div
       style={{ maxWidth: "700px" }}
-      className="p-6 p-4 border-4 collapse-open border bg-stone-300"
+      className="p-6 p-4 border-4 collapse-open border bg-sky-300"
     >
       <input type="radio" name="my-accordion-1" hidden />
       <div
@@ -30,7 +30,7 @@ export default function FlashCardHidden(params: {
       >
         {params.front}
         <br />
-        <span className="truncate text-stone-300">{space}</span>
+        <span className="truncate text-sky-300">{space}</span>
       </div>
       {showBack && (
         <div>
