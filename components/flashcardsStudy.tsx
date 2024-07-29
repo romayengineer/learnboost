@@ -15,7 +15,12 @@ export default function FlashcardsStudy(params: {
   var [flashcard, setFlashcard] = React.useState(
     params.flashcards[randomIndex]
   );
-  var next = (easy: number, flashcardId: string) => {
+  var next = (
+    easy: number,
+    flashcardId: string,
+    timeFront: number,
+    timeBack: number
+  ) => {
     // easy goes from 0 to 3
     var newFlashcard = flashcard;
     if (params.flashcards.length > 1) {
@@ -27,7 +32,7 @@ export default function FlashcardsStudy(params: {
     if (newFlashcard != flashcard) {
       setFlashcard(newFlashcard);
       setFlashcardCount((prev) => prev + 1);
-      sendRecall(pb, flashcardId, 0, 0, easy);
+      sendRecall(pb, flashcardId, timeFront, timeBack, easy);
     }
   };
   return (

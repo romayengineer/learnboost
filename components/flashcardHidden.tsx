@@ -3,11 +3,19 @@ import React from "react";
 import EasyButtons from "./easyButtons";
 
 export default function FlashCardHidden(params: {
-  next: (easy: number, flashcardId: string) => void;
+  next: (
+    easy: number,
+    flashcardId: string,
+    timeFront: number,
+    timeBack: number
+  ) => void;
   id: string;
   front: string;
   back: string;
 }) {
+  const [startTime, setStartTime] = React.useState(Date.now());
+  const [frontTimeDiff, setFrontTimeDiff] = React.useState(0);
+  const [backTimeDiff, setBackTimeDiff] = React.useState(0);
   // TODO collapse CSS class makes the div dissapear
   const [showBack, setShowBack] = React.useState(false);
   // TODO delete, this is so the front is long enough
@@ -16,6 +24,7 @@ export default function FlashCardHidden(params: {
   var toggleShowBack = () => {
     const newShowBack = !showBack;
     setShowBack(newShowBack);
+    setFrontTimeDiff(Date.now() - startTime);
   };
 
   return (
@@ -42,8 +51,9 @@ export default function FlashCardHidden(params: {
           <br />
           <EasyButtons
             next={(easy) => {
+              setBackTimeDiff(Date.now() - startTime);
               setShowBack(false);
-              params.next(easy, params.id);
+              params.next(easy, params.id, frontTimeDiff, backTimeDiff);
             }}
           />
         </div>
