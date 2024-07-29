@@ -5,6 +5,19 @@ import FlashcardsCounter from "./flashcardsCounter";
 import { getRecalls, login, sendRecall } from "@/app/db";
 import Client from "pocketbase";
 
+type GroupedRecalls = {
+  [id: string]: { totalTime: number; totalEasy: number };
+};
+
+type RecallData = {
+  flashcardId: string;
+  timeFront: number;
+  timeBack: number;
+  easy: number;
+};
+
+type RecallsData = Array<RecallData>;
+
 /**
  * Takes an array of flashcard recall data and consolidates it into a summary
  * object. It aggregates the total time spent and total "easy" score for each
@@ -23,10 +36,8 @@ function groupRecallsByFlashcardId(
     timeBack: number;
     easy: number;
   }>
-): { [id: string]: { totalTime: number; totalEasy: number } } {
-  var groupedRecalls: {
-    [id: string]: { totalTime: number; totalEasy: number };
-  } = {};
+): GroupedRecalls {
+  var groupedRecalls: GroupedRecalls = {};
   recalls.forEach((recall) => {
     const prevVal = groupedRecalls[recall.flashcardId] || {};
     groupedRecalls[recall.flashcardId] = {
@@ -48,16 +59,9 @@ export default function FlashcardsStudy(params: {
   const [randomIndex, setRandomIndex] = React.useState(getRandomIndex());
   const [flashcardCount, setFlashcardCount] = React.useState(1);
   const [groupedRecalls, setGroupedRecalls] = React.useState(
-    {} as { [id: string]: { totalTime: number; totalEasy: number } }
+    {} as GroupedRecalls
   );
-  const [recalls, setRecalls] = React.useState(
-    [] as Array<{
-      flashcardId: string;
-      timeFront: number;
-      timeBack: number;
-      easy: number;
-    }>
-  );
+  const [recalls, setRecalls] = React.useState([] as RecallsData);
   const flashcard = params.flashcards[randomIndex];
   var newRandomIndex = randomIndex;
   console.log("DEBUG FlashcardsStudy: flashcard Picked ", flashcard);
@@ -66,12 +70,7 @@ export default function FlashcardsStudy(params: {
   useEffect(() => {
     const newPb = login();
     const primRecalls = async () => {
-      const newRecalls = (await getRecalls(newPb)) as unknown as Array<{
-        flashcardId: string;
-        timeFront: number;
-        timeBack: number;
-        easy: number;
-      }>;
+      const newRecalls = (await getRecalls(newPb)) as unknown as RecallsData;
       console.log("DEBUG newRecalls: ", newRecalls);
       const groupedRecallsData = groupRecallsByFlashcardId(newRecalls);
       setGroupedRecalls(groupedRecallsData);
