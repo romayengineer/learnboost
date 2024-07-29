@@ -4,23 +4,11 @@ import FlashCardHidden from "@/components/flashcardHidden";
 import FlashcardsCounter from "./flashcardsCounter";
 import { getRecalls, login, sendRecall } from "@/app/db";
 import Client from "pocketbase";
+import { GroupedRecalls, RecallData, RecallsData } from "@/app/dbTypes";
 
 const getRandomIndex = (arrayData: Array<any>) => {
   return Math.floor(arrayData.length * Math.random());
 };
-
-type GroupedRecalls = {
-  [id: string]: { totalTime: number; totalEasy: number };
-};
-
-export type RecallData = {
-  flashcardId: string;
-  timeFront: number;
-  timeBack: number;
-  easy: number;
-};
-
-type RecallsData = Array<RecallData>;
 
 /**
  * Takes an array of flashcard recall data and consolidates it into a summary
