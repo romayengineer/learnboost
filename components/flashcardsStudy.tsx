@@ -36,6 +36,9 @@ export default function FlashcardsStudy(params: {
   };
   const [randomIndex, setRandomIndex] = React.useState(getRandomIndex());
   const [flashcardCount, setFlashcardCount] = React.useState(1);
+  const [groupedRecalls, setGroupedRecalls] = React.useState(
+    {} as { [id: string]: { totalTime: number; totalEasy: number } }
+  );
   const [recalls, setRecalls] = React.useState(
     [] as Array<{
       flashcardId: string;
@@ -48,6 +51,7 @@ export default function FlashcardsStudy(params: {
   var newRandomIndex = randomIndex;
   console.log("DEBUG FlashcardsStudy: flashcard Picked ", flashcard);
   console.log("DEBUG FlashcardsStudy flashcardSSSS: ", params.flashcards);
+  console.log("DEBUG FlashcardsStudy GroupedRecalls: ", groupedRecalls);
   useEffect(() => {
     const newPb = login();
     const primRecalls = async () => {
@@ -58,7 +62,8 @@ export default function FlashcardsStudy(params: {
         easy: number;
       }>;
       console.log("DEBUG newRecalls: ", newRecalls);
-      groupRecallsByFlashcardId(newRecalls);
+      const groupedRecallsData = groupRecallsByFlashcardId(newRecalls);
+      setGroupedRecalls(groupedRecallsData);
       setRecalls(newRecalls);
     };
     setPb(newPb);
@@ -88,6 +93,19 @@ export default function FlashcardsStudy(params: {
       sendRecall(pb, flashcardId, timeFront, timeBack, easy).catch((error) => {
         console.log("ERROR sendRecall: ", error);
         throw error;
+      });
+      setRecalls((oldRecalls) => {
+        const newRecalls = [
+          ...oldRecalls,
+          {
+            easy,
+            flashcardId,
+            timeFront,
+            timeBack,
+          },
+        ];
+        console.log("DEBUG newRecalls: ", newRecalls);
+        return newRecalls;
       });
     }
   };
