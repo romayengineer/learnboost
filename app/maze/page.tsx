@@ -1,5 +1,5 @@
 import { login, getMazes } from "../db";
-import Link from "next/link";
+import FlashCard from "../../components/flashcard";
 
 export default async function Maze() {
   var pb = await login();
@@ -12,13 +12,7 @@ export default async function Maze() {
       <br />
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
         {mazes.map((maze) => {
-          return (
-            <Link href={`/maze/${maze.id}`}>
-              <div className="p-6 bg-stone-300 max-w-sm rounded overflow-hidden shadow-lg">
-                {maze.name}
-              </div>
-            </Link>
-          );
+          return <FlashCard mazeId={maze.id} mazeName={maze.name} />;
         })}
       </div>
     </main>
