@@ -7,7 +7,6 @@ export default function NavBar() {
           <Image
             width={50}
             height={32}
-            style={{ width: "auto" }}
             src="/learnboost-logo.png"
             className="h-8"
             alt="Learnboost Logo"
