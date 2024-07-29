@@ -2,9 +2,15 @@
 import Image from "next/image";
 import SideBar from "@/components/sidebar";
 import { login, createMaze } from "@/app/db";
+import { useState, useEffect } from "react";
+import Client from "pocketbase";
 
 export default function NewMaze() {
-  var pb = login();
+  const [pb, setPb] = useState(new Client());
+
+  useEffect(() => {
+    setPb(login());
+  }, []);
 
   var onSubmit = (event: React.FormEvent) => {
     event.preventDefault();
