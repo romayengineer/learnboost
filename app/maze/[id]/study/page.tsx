@@ -19,7 +19,7 @@ export default function StudyMazeID({ params }: { params: { id: string } }) {
         back: string;
       }>;
       setFlashcards(flashcardsData);
-      console.log("DEBUG flashcards: ", flashcardsData);
+      console.log("DEBUG StudyMazeID flashcardsData: ", flashcardsData);
     };
     promFlashcards();
   }, [mazeId]);

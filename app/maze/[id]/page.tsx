@@ -28,7 +28,7 @@ export default function MazeID({ params }: { params: { id: string } }) {
         notFound();
       }
       setMaze(mazeData);
-      console.log("DEBUG maze: ", mazeData);
+      console.log("DEBUG MazeID mazeData: ", mazeData);
     };
     const promFlashcards = async () => {
       const flashcardsData = (await getFlashcards(
@@ -39,7 +39,7 @@ export default function MazeID({ params }: { params: { id: string } }) {
         back: string;
       }>;
       setFlashcards(flashcardsData);
-      console.log("DEBUG flashcards: ", flashcardsData);
+      console.log("DEBUG MazeID flashcardsData: ", flashcardsData);
     };
     promMaze();
     promFlashcards();

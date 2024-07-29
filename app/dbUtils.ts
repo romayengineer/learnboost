@@ -29,7 +29,7 @@ export function groupRecallsByFlashcardId(recalls: RecallsData): GroupedRecalls 
         totalEasy: (prevVal.totalEasy || 0) + recall.easy,
         };
     });
-    console.log("DEBUG groupRecallsByFlashcardId: ", groupedRecalls);
+    console.log("DEBUG groupRecallsByFlashcardId groupedRecalls: ", groupedRecalls);
     return groupedRecalls;
 }
 
