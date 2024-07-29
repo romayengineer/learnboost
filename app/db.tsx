@@ -10,7 +10,8 @@ export async function loginAsync() {
       // cache: "no-store",
       // to avoid vercel error
       // Dynamic server usage: no-store fetch
-      next: { revalidate: 0 },
+      // this option causes TypeError: Invalid URL
+      // next: { revalidate: 0 },
     }
   );
 
@@ -34,7 +35,8 @@ export function login() {
       // cache: "no-store",
       // to avoid vercel error
       // Dynamic server usage: no-store fetch
-      next: { revalidate: 0 },
+      // this option causes TypeError: Invalid URL
+      // next: { revalidate: 0 },
     }
   );
 
