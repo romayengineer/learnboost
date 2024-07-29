@@ -26,8 +26,8 @@ export default function Home() {
                 className="w-8 float-left mr-4 mt-2"
               />
               <strong>Identifies knowledge gaps:</strong> By testing yourself,
-              you quickly discover what you don't know, allowing for targeted
-              review and more efficient study sessions.
+              you quickly discover what you don&apos;t know, allowing for
+              targeted review and more efficient study sessions.
             </li>
             <li className="mb-3">
               <img
@@ -53,8 +53,8 @@ export default function Home() {
                 className="w-8 float-left mr-4 mt-2"
               />
               <strong>Mimics real-world application:</strong> Practicing active
-              recall simulates how you'll need to use the information in exams
-              or real-life situations, better preparing you for future
+              recall simulates how you&apos;ll need to use the information in
+              exams or real-life situations, better preparing you for future
               challenges.
             </li>
           </ul>
