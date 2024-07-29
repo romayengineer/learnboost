@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import EasyButtons from "./easyButtons";
-import { RecallData } from "./flashcardsStudy";
+import { RecallData } from "@/app/dbTypes";
 
 export default function FlashCardHidden(params: {
   next: (data: RecallData) => void;
