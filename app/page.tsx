@@ -1,7 +1,6 @@
 import Image from "next/image";
 
 export default function Home() {
-  // TODO change width and height for Image
   return (
     <main>
       <div className="min-h-screen">

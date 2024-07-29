@@ -5,8 +5,6 @@ export default function EasyButtons(params: { next: (easy: number) => void }) {
   // Challenging
   // Hard
   return (
-    // <div className="flex flex-row justify-center items-center">
-
     <div
       className="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4"
       style={{ minHeight: "50px" }}

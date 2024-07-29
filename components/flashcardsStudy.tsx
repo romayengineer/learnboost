@@ -9,7 +9,6 @@ export default function FlashcardsStudy(params: {
   flashcards: Array<{ id: string; front: string; back: string }>;
 }) {
   var pb = login();
-  //   var randomIndex = Math.floor(Math.random() * params.flashcards.length);
   var randomIndex = 0;
   var [flashcardCount, setFlashcardCount] = React.useState(1);
   var [flashcard, setFlashcard] = React.useState(
