@@ -1,14 +1,10 @@
 "use client";
 import React from "react";
 import EasyButtons from "./easyButtons";
+import { RecallData } from "./flashcardsStudy";
 
 export default function FlashCardHidden(params: {
-  next: (
-    easy: number,
-    flashcardId: string,
-    timeFront: number,
-    timeBack: number
-  ) => void;
+  next: (data: RecallData) => void;
   id: string;
   front: string;
   back: string;
@@ -56,7 +52,12 @@ export default function FlashCardHidden(params: {
                 _backTimeDiff >= frontTimeDiff ? _backTimeDiff : frontTimeDiff;
               setBackTimeDiff(_backTimeDiff);
               setShowBack(false);
-              params.next(easy, params.id, frontTimeDiff, _backTimeDiff);
+              params.next({
+                easy: easy,
+                flashcardId: params.id,
+                timeFront: frontTimeDiff,
+                timeBack: _backTimeDiff,
+              } as RecallData);
             }}
           />
         </div>

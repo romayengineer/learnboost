@@ -9,7 +9,7 @@ type GroupedRecalls = {
   [id: string]: { totalTime: number; totalEasy: number };
 };
 
-type RecallData = {
+export type RecallData = {
   flashcardId: string;
   timeFront: number;
   timeBack: number;
@@ -29,14 +29,7 @@ type RecallsData = Array<RecallData>;
  * @returns a map of flashcardId to an object with the totalTime and the
  * TotalEasy
  */
-function groupRecallsByFlashcardId(
-  recalls: Array<{
-    flashcardId: string;
-    timeFront: number;
-    timeBack: number;
-    easy: number;
-  }>
-): GroupedRecalls {
+function groupRecallsByFlashcardId(recalls: RecallsData): GroupedRecalls {
   var groupedRecalls: GroupedRecalls = {};
   recalls.forEach((recall) => {
     const prevVal = groupedRecalls[recall.flashcardId] || {};
@@ -79,12 +72,7 @@ export default function FlashcardsStudy(params: {
     setPb(newPb);
     primRecalls();
   }, []);
-  const next = (
-    easy: number,
-    flashcardId: string,
-    timeFront: number,
-    timeBack: number
-  ) => {
+  const next = (data: RecallData) => {
     // easy goes from 0 to 3
     var newFlashcard = flashcard;
     if (params.flashcards.length > 1) {
@@ -99,13 +87,14 @@ export default function FlashcardsStudy(params: {
       setRandomIndex(newRandomIndex);
       console.log(`DEBUG setRandomIndex to ${newRandomIndex}`);
       setFlashcardCount((prev) => prev + 1);
-      console.log("DEBUG sendRecall: ", {
-        flashcardId,
-        timeFront,
-        timeBack,
-        easy,
-      });
-      sendRecall(pb, flashcardId, timeFront, timeBack, easy).catch((error) => {
+      console.log("DEBUG sendRecall: ", data);
+      sendRecall(
+        pb,
+        data.flashcardId,
+        data.timeFront,
+        data.timeBack,
+        data.easy
+      ).catch((error) => {
         console.log("ERROR sendRecall: ", error);
         throw error;
       });
@@ -113,10 +102,10 @@ export default function FlashcardsStudy(params: {
         const newRecalls = [
           ...oldRecalls,
           {
-            easy,
-            flashcardId,
-            timeFront,
-            timeBack,
+            easy: data.easy,
+            flashcardId: data.flashcardId,
+            timeFront: data.timeFront,
+            timeBack: data.timeBack,
           },
         ];
         console.log("DEBUG newRecalls: ", newRecalls);
