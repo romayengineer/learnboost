@@ -1,14 +1,22 @@
 import { RecordModel } from "pocketbase";
 
-export function setLocalRecalls(recalls: Array<RecordModel>) {
+function setLocal(modelName: string, arrayData: Array<any>) {
     if (typeof window === "undefined") {
-      console.log("DEBUG setLocalRecalls window: undefined");
-      return;
+        console.log("DEBUG setLocal window: undefined");
+        return;
     }
-    const recallsStringify = JSON.stringify(recalls);
-    window.localStorage.setItem("recalls", recallsStringify);
-  }
-  
+    const dataStringify = JSON.stringify(arrayData);
+    window.localStorage.setItem(modelName, dataStringify);
+}
+
+export function setLocalRecalls(recalls: Array<RecordModel>) {
+    setLocal("recalls", recalls);
+}
+
+export function setLocalMazes(mazes: Array<RecordModel>) {
+    setLocal("mazes", mazes);
+}
+
 export function getLocalRecalls(): Array<RecordModel> {
     if (typeof window === "undefined") {
         console.log("DEBUG getLocalRecalls window: undefined");
@@ -19,15 +27,6 @@ export function getLocalRecalls(): Array<RecordModel> {
     return localRecalls;
 }
 
-export function setLocalMazes(mazes: Array<RecordModel>) {
-    if (typeof window === "undefined") {
-      console.log("DEBUG setLocalMazes window: undefined");
-      return;
-    }
-    const mazesStringify = JSON.stringify(mazes);
-    window.localStorage.setItem("mazes", mazesStringify);
-  }
-  
 export function getLocalMazes(): Array<RecordModel> {
     if (typeof window === "undefined") {
         console.log("DEBUG getLocalMazes window: undefined");
