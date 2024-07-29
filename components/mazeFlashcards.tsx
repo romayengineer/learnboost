@@ -2,6 +2,7 @@
 import FlashCard from "@/components/flashcard";
 
 export default function MazeFlashcards(params: {
+  mazeId: string;
   flashcards: Array<{ front: string; back: string }>;
 }) {
   const flashcards = params.flashcards;
@@ -9,7 +10,7 @@ export default function MazeFlashcards(params: {
     <div className="mt-10">
       <a
         className="text-xl ml-4 pl-6 pr-6 pt-2 pb-2 rounded-full bg-blue-300"
-        href={`${window.location.href}/study`}
+        href={`/maze/${params.mazeId}/study`}
       >
         Study!
       </a>

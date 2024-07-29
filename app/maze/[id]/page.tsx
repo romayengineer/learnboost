@@ -21,7 +21,7 @@ export default async function MazeID({ params }: { params: { id: string } }) {
     <main className="p-10">
       <h1 className="text-2xl inline underline">{maze.name}</h1>
       <br />
-      <MazeFlashcards flashcards={flashcards} />
+      <MazeFlashcards mazeId={mazeId} flashcards={flashcards} />
     </main>
   );
 }
