@@ -9,6 +9,8 @@ export default function FlashCardHidden(params: {
 }) {
   // TODO collapse CSS class makes the div dissapear
   const [showBack, setShowBack] = React.useState(false);
+  // TODO delete, this is so the front is long enough
+  const space = Array(119).join(".");
 
   var toggleShowBack = () => {
     const newShowBack = !showBack;
@@ -26,7 +28,9 @@ export default function FlashCardHidden(params: {
         className="collapse-title text-xl font-medium"
         onClick={toggleShowBack}
       >
-        <p>{params.front}</p>
+        {params.front}
+        <br />
+        <span className="truncate text-stone-300">{space}</span>
       </div>
       {showBack && (
         <div>
