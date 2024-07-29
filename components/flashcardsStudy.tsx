@@ -5,6 +5,17 @@ import FlashcardsCounter from "./flashcardsCounter";
 import { getRecalls, login, sendRecall } from "@/app/db";
 import Client from "pocketbase";
 
+/**
+ * Takes an array of flashcard recall data and consolidates it into a summary
+ * object. It aggregates the total time spent and total "easy" score for each
+ * unique flashcard ID. This function streamlines flashcard review data, making
+ * it easier to analyze performance across multiple study sessions by providing
+ * a concise overview of each flashcard's cumulative review statistics.
+ *
+ * @param recalls all the recalls from database
+ * @returns a map of flashcardId to an object with the totalTime and the
+ * TotalEasy
+ */
 function groupRecallsByFlashcardId(
   recalls: Array<{
     flashcardId: string;
