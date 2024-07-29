@@ -7,6 +7,7 @@ type StringMap = {
 const models: StringMap = {
     recalls: "recalls",
     mazes: "mazes",
+    flashcards: "flashcards",
 }
 
 function setLocal(modelName: string, arrayData: Array<any>) {
@@ -36,10 +37,18 @@ export function setLocalMazes(mazes: Array<RecordModel>) {
     setLocal(models.mazes, mazes);
 }
 
+export function setLocalFlashcards(flashcards: Array<RecordModel>) {
+    setLocal(models.flashcards, flashcards);
+}
+
 export function getLocalRecalls(): Array<RecordModel> {
     return getLocal(models.recalls);
 }
 
 export function getLocalMazes(): Array<RecordModel> {
     return getLocal(models.mazes);
+}
+
+export function getLocalFlashcards(): Array<RecordModel> {
+    return getLocal(models.flashcards);
 }
