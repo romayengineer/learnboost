@@ -10,7 +10,7 @@ export default function Home() {
             src="studying-reading-1.webp"
           />
           <h1 className="text-3xl">Master Any Subject in Record Time</h1>
-          <ul className="mt-10 pr-10">
+          <ul className="mt-10 pr-10 text-left">
             <li className="mb-3">
               <img
                 src="yellow-star.webp"

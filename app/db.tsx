@@ -18,6 +18,13 @@ export async function getMazes(pb: PocketBase): Promise<RecordModel[]> {
   return pb.collection("mazes").getFullList();
 }
 
+export async function getMaze(
+  pb: PocketBase,
+  mazeId: string
+): Promise<RecordModel[]> {
+  return pb.collection("mazes").getOne(mazeId);
+}
+
 export async function getFlashcards(
   pb: PocketBase,
   mazeId: string
