@@ -7,24 +7,11 @@ var NEXT_PUBLIC_DB_USER_NAME =
 var NEXT_PUBLIC_DB_PASSWORD =
   process.env.NEXT_PUBLIC_DB_PASSWORD || "dummyPassword";
 
-export async function loginAsync() {
-  const pb = new PocketBase(NEXT_PUBLIC_PB_URL);
-
-  await pb.admins.authWithPassword(
-    NEXT_PUBLIC_DB_USER_NAME!,
-    NEXT_PUBLIC_DB_PASSWORD!,
-    {
-      cache: "no-store",
-      // to avoid vercel error
-      // Dynamic server usage: no-store fetch
-      // this option causes TypeError: Invalid URL
-      // next: { revalidate: 0 },
-    }
-  );
-
-  return pb;
-}
-
+/**
+ * Login should only be called on client side components
+ * given that server side components do not support cache: "no-store"
+ * @returns
+ */
 export function login() {
   const pb = new PocketBase(NEXT_PUBLIC_PB_URL);
 
@@ -32,11 +19,7 @@ export function login() {
     NEXT_PUBLIC_DB_USER_NAME!,
     NEXT_PUBLIC_DB_PASSWORD!,
     {
-      // cache: "no-store",
-      // to avoid vercel error
-      // Dynamic server usage: no-store fetch
-      // this option causes TypeError: Invalid URL
-      // next: { revalidate: 0 },
+      cache: "no-store",
     }
   );
 
@@ -51,18 +34,18 @@ export function createMaze(
   return pb.collection("mazes").create({ name: name, desciption: description });
 }
 
-export async function getMazes(pb: PocketBase): Promise<RecordModel[]> {
+export function getMazes(pb: PocketBase): Promise<RecordModel[]> {
   return pb.collection("mazes").getFullList();
 }
 
-export async function getMaze(
+export function getMaze(
   pb: PocketBase,
   mazeId: string
 ): Promise<RecordModel[]> {
   return pb.collection("mazes").getOne(mazeId);
 }
 
-export async function getFlashcards(
+export function getFlashcards(
   pb: PocketBase,
   mazeId: string
 ): Promise<RecordModel[]> {
