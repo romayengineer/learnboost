@@ -19,7 +19,14 @@ export default async function MazeID({ params }: { params: { id: string } }) {
       <SideBar />
       <div className="p-10">
         <h1 className="text-2xl inline underline">{maze.name}</h1>
-        <br />
+        <a href="/maze/new" className="inline">
+          <img
+            className="w-10 mb-2 mr-2 inline ml-10"
+            src="/plus-sign-1.png"
+            alt="Add New Maze"
+          ></img>
+          <span className="text-2xl inline-block">Create Maze</span>
+        </a>
         <MazeFlashcards mazeId={mazeId} flashcards={flashcards} />
       </div>
     </main>
