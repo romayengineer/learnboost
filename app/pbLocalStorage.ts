@@ -1,6 +1,10 @@
 import { RecordModel } from "pocketbase";
 
-const models = {
+type StringMap = {
+    [key: string]: string
+}
+
+const models: StringMap = {
     recalls: "recalls",
     mazes: "mazes",
 }
