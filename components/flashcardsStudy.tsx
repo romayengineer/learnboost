@@ -26,7 +26,7 @@ export default function FlashcardsStudy(params: {
   console.log("DEBUG FlashcardsStudy GroupedRecalls: ", groupedRecalls);
   useEffect(() => {
     const newPb = login();
-    const primRecalls = async () => {
+    const promRecalls = async () => {
       const newRecalls = (await getRecalls(newPb)) as unknown as RecallsData;
       console.log("DEBUG newRecalls: ", newRecalls);
       const groupedRecallsData = groupRecallsByFlashcardId(newRecalls);
@@ -34,7 +34,7 @@ export default function FlashcardsStudy(params: {
       setRecalls(newRecalls);
     };
     setPb(newPb);
-    primRecalls();
+    promRecalls();
   }, []);
   const next = (data: RecallData) => {
     // easy goes from 0 to 3

@@ -1,4 +1,8 @@
-import { RecallsData, GroupedRecalls } from "@/app/dbTypes";
+import {
+    RecallsData,
+    GroupedRecalls,
+    SortedRecallsByEasyAndTime,
+} from "@/app/dbTypes";
 
 export const getRandomIndex = (arrayData: Array<any>) => {
     return Math.floor(arrayData.length * Math.random());
@@ -26,4 +30,9 @@ export function groupRecallsByFlashcardId(recalls: RecallsData): GroupedRecalls 
     });
     console.log("DEBUG groupRecallsByFlashcardId: ", groupedRecalls);
     return groupedRecalls;
+}
+
+export function getSortedRecallsByEasyAndTime(groupedRecalls: GroupedRecalls): SortedRecallsByEasyAndTime {
+    // TODO map the groupedRecalls into an array grouped by easy and time
+    return [] as SortedRecallsByEasyAndTime;
 }

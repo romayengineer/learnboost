@@ -13,3 +13,5 @@ export type RecallData = {
 };
 
 export type RecallsData = Array<RecallData>;
+
+export type SortedRecallsByEasyAndTime = Array<RecallData>;
