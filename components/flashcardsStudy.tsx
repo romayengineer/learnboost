@@ -6,12 +6,22 @@ import FlashCardHidden from "@/components/flashcardHidden";
 export default function FlashcardsStudy(params: {
   flashcards: Array<{ front: string; back: string }>;
 }) {
-  var [flashcard, setFlashcard] = React.useState(params.flashcards[0]);
+  var randomIndex = Math.floor(Math.random() * params.flashcards.length);
+  var [flashcard, setFlashcard] = React.useState(
+    params.flashcards[randomIndex]
+  );
   var next = (easy: number) => {
     // easy goes from 0 to 3
-    setFlashcard(
-      params.flashcards[Math.floor(Math.random() * params.flashcards.length)]
-    );
+    var newFlashcard = flashcard;
+    if (params.flashcards.length > 1) {
+      while (newFlashcard == flashcard) {
+        var randomIndex = Math.floor(Math.random() * params.flashcards.length);
+        newFlashcard = params.flashcards[randomIndex];
+      }
+    }
+    if (newFlashcard != flashcard) {
+      setFlashcard(newFlashcard);
+    }
   };
   return (
     <main>
