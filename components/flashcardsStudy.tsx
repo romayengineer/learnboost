@@ -13,17 +13,18 @@ function groupRecallsByFlashcardId(
     easy: number;
   }>
 ): { [id: string]: { totalTime: number; totalEasy: number } } {
-  var newRecalls: { [id: string]: { totalTime: number; totalEasy: number } } =
-    {};
+  var groupedRecalls: {
+    [id: string]: { totalTime: number; totalEasy: number };
+  } = {};
   recalls.forEach((recall) => {
-    const prevVal = newRecalls[recall.flashcardId] || {};
-    newRecalls[recall.flashcardId] = {
+    const prevVal = groupedRecalls[recall.flashcardId] || {};
+    groupedRecalls[recall.flashcardId] = {
       totalTime: (prevVal.totalTime || 0) + recall.timeBack,
       totalEasy: (prevVal.totalEasy || 0) + recall.easy,
     };
   });
-  console.log("DEBUG groupRecallsByFlashcardId: ", newRecalls);
-  return newRecalls;
+  console.log("DEBUG groupRecallsByFlashcardId: ", groupedRecalls);
+  return groupedRecalls;
 }
 
 export default function FlashcardsStudy(params: {
