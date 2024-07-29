@@ -15,7 +15,9 @@ export default async function StudyMazeID({
   }>;
   return (
     <main>
-      <FlashcardsStudy flashcards={flashcards} />
+      <div className="flex flex-row justify-center items-center">
+        <FlashcardsStudy flashcards={flashcards} />
+      </div>
     </main>
   );
 }

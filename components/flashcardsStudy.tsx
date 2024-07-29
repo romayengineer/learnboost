@@ -6,7 +6,8 @@ import FlashCardHidden from "@/components/flashcardHidden";
 export default function FlashcardsStudy(params: {
   flashcards: Array<{ front: string; back: string }>;
 }) {
-  var randomIndex = Math.floor(Math.random() * params.flashcards.length);
+  //   var randomIndex = Math.floor(Math.random() * params.flashcards.length);
+  var randomIndex = 0;
   var [flashcard, setFlashcard] = React.useState(
     params.flashcards[randomIndex]
   );

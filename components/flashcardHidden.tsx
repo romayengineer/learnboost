@@ -17,12 +17,12 @@ export default function FlashCardHidden(params: {
 
   return (
     <div
-      style={{ width: "700px" }}
+      style={{ maxWidth: "700px" }}
       className="p-6 p-4 border-4 collapse-open border bg-stone-300"
     >
       <input type="radio" name="my-accordion-1" hidden />
       <div
-        style={{ height: "60px" }}
+        style={{ minHeight: "60px" }}
         className="collapse-title text-xl font-medium"
         onClick={toggleShowBack}
       >
@@ -31,7 +31,7 @@ export default function FlashCardHidden(params: {
       {showBack && (
         <div>
           <br />
-          <div style={{ height: "200px" }} className="collapse-content">
+          <div style={{ minHeight: "200px" }} className="collapse-content">
             <p>{params.back}</p>
           </div>
           <br />

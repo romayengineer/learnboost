@@ -5,7 +5,12 @@ export default function EasyButtons(params: { next: (x: number) => void }) {
   // Challenging
   // Hard
   return (
-    <div>
+    // <div className="flex flex-row justify-center items-center">
+
+    <div
+      className="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4"
+      style={{ minHeight: "50px" }}
+    >
       <button
         type="button"
         onClick={() => params.next(0)}
