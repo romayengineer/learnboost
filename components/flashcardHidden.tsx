@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import EasyButtons from "./easyButtons";
 
 export default function FlashCardHidden(params: {
   front: string;
@@ -15,7 +16,7 @@ export default function FlashCardHidden(params: {
 
   return (
     <div
-      style={{ width: "600px" }}
+      style={{ width: "700px" }}
       className="p-6 p-4 border-4 collapse-open border bg-stone-300"
       onClick={toggleShowBack}
     >
@@ -29,6 +30,8 @@ export default function FlashCardHidden(params: {
           <div className="collapse-content">
             <p>{params.back}</p>
           </div>
+          <br />
+          <EasyButtons />
         </div>
       )}
     </div>
