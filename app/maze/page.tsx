@@ -1,10 +1,10 @@
-import { login, getMazes } from "../db";
+import { loginAsync, getMazes } from "../db";
 
 import SideBar from "@/components/sidebar";
 import Maze from "../../components/maze";
 
 export default async function MazePage() {
-  var pb = await login();
+  var pb = await loginAsync();
   var mazes = await getMazes(pb);
   // TODO delete is for testing
   mazes = Array.from({ length: 15 }, () => mazes[0]);

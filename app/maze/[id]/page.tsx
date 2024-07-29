@@ -1,11 +1,11 @@
-import { login, getFlashcards, getMaze } from "@/app/db";
+import { loginAsync, getFlashcards, getMaze } from "@/app/db";
 import { redirect } from "next/navigation";
 import SideBar from "@/components/sidebar";
 import MazeFlashcards from "@/components/mazeFlashcards";
 
 export default async function MazeID({ params }: { params: { id: string } }) {
   let mazeId = params.id;
-  let db = await login();
+  let db = await loginAsync();
   let maze = (await getMaze(db, mazeId)) as unknown as { name: string };
   let flashcards = (await getFlashcards(db, mazeId)) as unknown as Array<{
     front: string;

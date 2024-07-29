@@ -1,19 +1,35 @@
+"use client";
 import SideBar from "@/components/sidebar";
+import { login, createMaze } from "@/app/db";
 
 export default function NewMaze() {
+  var pb = login();
+
+  var onSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    const target = event.target as any;
+    var mazeName = target.mazeName.value;
+    // TODO mazeDescription is not retrieved
+    var mazeDescription = target.mazeDescription.value;
+    createMaze(pb, mazeName, mazeDescription);
+  };
+
   return (
     <main>
       <SideBar />
       <div className="p-10">
-        <form className="bg-sky-300 inline-block pt-10 pl-10 pr-10 pb-6 rounded-3xl">
+        <form
+          onSubmit={onSubmit}
+          className="bg-sky-300 inline-block pt-10 pl-10 pr-10 pb-6 rounded-3xl"
+        >
           <div className="pb-4">
             <h1 className="text-2xl">Create a new Maze!</h1>
             <br />
             <label className="mr-12">Maze Name</label>
             <br />
             <input
-              id="maze-name"
-              name="maze-name"
+              id="mazeName"
+              name="mazeName"
               type="text"
               className="border-2 border-indigo-500 px-3 py-1 rounded-2xl"
             />
@@ -22,8 +38,8 @@ export default function NewMaze() {
             <label className="mr-2">Maze Description</label>
             <br />
             <textarea
-              id="maze-description"
-              name="maze-description"
+              id="mazeDescription"
+              name="mazeDescription"
               className="border-2 border-indigo-500 px-3 py-1 rounded-2xl"
               rows={4}
               cols={50}
