@@ -6,7 +6,7 @@ import { getRecalls, login, sendRecall } from "@/app/db";
 import Client from "pocketbase";
 import { GroupedRecalls, RecallData, RecallsData } from "@/app/dbTypes";
 import { getRandomIndex, groupRecallsByFlashcardId } from "@/app/dbUtils";
-import { getSortedRecallsByEasyAndTime } from "@/app/dbUtils";
+import { getHardestAndLeastTimeRecalls } from "@/app/dbUtils";
 
 export default function FlashcardsStudy(params: {
   flashcards: Array<{ id: string; front: string; back: string }>;
@@ -32,8 +32,8 @@ export default function FlashcardsStudy(params: {
       console.log("DEBUG newRecalls: ", newRecalls);
       const groupedRecallsData = groupRecallsByFlashcardId(newRecalls);
       setGroupedRecalls(groupedRecallsData);
-      const sortedRecalls = getSortedRecallsByEasyAndTime(groupedRecallsData);
-      console.log("DEBUG sortedRecalls: ", sortedRecalls);
+      const hardestRecalls = getHardestAndLeastTimeRecalls(groupedRecallsData);
+      console.log("DEBUG sortedRecalls: ", hardestRecalls);
       setRecalls(newRecalls);
     };
     setPb(newPb);

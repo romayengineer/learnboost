@@ -48,8 +48,7 @@ export function groupRecallsByFlashcardId(recalls: RecallsData): GroupedRecalls 
  * flashcard
  * @returns a sorted array of flashcardsIds, the hardest and least time studied.
  */
-export function getSortedRecallsByEasyAndTime(groupedRecalls: GroupedRecalls): SortedRecallsByEasyAndTime {
-    // TODO map the groupedRecalls into an array grouped by easy and time
+export function getHardestAndLeastTimeRecalls(groupedRecalls: GroupedRecalls): SortedRecallsByEasyAndTime {
     var sortedRecalls: SortedRecallsByEasyAndTime = [];
     for (const flashcardId in groupedRecalls) {
         const { totalTime, totalEasy } = groupedRecalls[flashcardId];
