@@ -7,7 +7,7 @@ export async function loginAsync() {
     process.env.NEXT_PUBLIC_DB_USER_NAME!,
     process.env.NEXT_PUBLIC_DB_PASSWORD!,
     {
-      cache: "no-store",
+      // cache: "no-store",
       // to avoid vercel error
       // Dynamic server usage: no-store fetch
       next: { revalidate: 0 },
@@ -31,7 +31,7 @@ export function login() {
     NEXT_PUBLIC_DB_USER_NAME!,
     NEXT_PUBLIC_DB_PASSWORD!,
     {
-      cache: "no-store",
+      // cache: "no-store",
       // to avoid vercel error
       // Dynamic server usage: no-store fetch
       next: { revalidate: 0 },
