@@ -2,12 +2,14 @@
 
 import React from "react";
 import FlashCardHidden from "@/components/flashcardHidden";
+import FlashcardsCounter from "./flashcardsCounter";
 
 export default function FlashcardsStudy(params: {
   flashcards: Array<{ front: string; back: string }>;
 }) {
   //   var randomIndex = Math.floor(Math.random() * params.flashcards.length);
   var randomIndex = 0;
+  var [flashcardCount, setFlashcardCount] = React.useState(1);
   var [flashcard, setFlashcard] = React.useState(
     params.flashcards[randomIndex]
   );
@@ -22,10 +24,12 @@ export default function FlashcardsStudy(params: {
     }
     if (newFlashcard != flashcard) {
       setFlashcard(newFlashcard);
+      setFlashcardCount((prev) => prev + 1);
     }
   };
   return (
     <main>
+      <FlashcardsCounter count={flashcardCount} />
       <FlashCardHidden
         next={next}
         front={flashcard.front}
