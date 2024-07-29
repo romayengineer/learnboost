@@ -78,18 +78,23 @@ export default function FlashcardsStudy(params: {
     // easy goes from 0 to 3
     var newFlashcard = flashcard;
     if (params.flashcards.length > 1) {
-      console.log("flashcards.length > 1");
+      console.log("DEBUG flashcards.length > 1");
       while (newFlashcard.id === flashcard.id) {
-        console.log("newFlashcard == flashcard >>> true");
+        console.log("DEBUG newFlashcard == flashcard >>> true");
         newRandomIndex = getRandomIndex();
         newFlashcard = params.flashcards[newRandomIndex];
       }
     }
     if (newFlashcard != flashcard) {
       setRandomIndex(newRandomIndex);
-      console.log(`setRandomIndex to ${newRandomIndex}`);
+      console.log(`DEBUG setRandomIndex to ${newRandomIndex}`);
       setFlashcardCount((prev) => prev + 1);
-      console.log("sendRecall: ", { flashcardId, timeFront, timeBack, easy });
+      console.log("DEBUG sendRecall: ", {
+        flashcardId,
+        timeFront,
+        timeBack,
+        easy,
+      });
       sendRecall(pb, flashcardId, timeFront, timeBack, easy).catch((error) => {
         console.log("ERROR sendRecall: ", error);
         throw error;

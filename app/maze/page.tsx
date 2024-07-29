@@ -12,11 +12,11 @@ export default function MazePage() {
   useEffect(() => {
     var pb = login();
     const promMazes = async () => {
-      console.log("getMazes");
+      console.log("DEBUG getMazes");
       setMazes(await getMazes(pb));
     };
     const promRecalls = async () => {
-      console.log("getRecall");
+      console.log("DEBUG getRecall");
       setRecalls(await getRecalls(pb));
     };
     promMazes();
