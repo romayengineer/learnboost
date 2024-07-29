@@ -1,13 +1,14 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import FlashCardHidden from "@/components/flashcardHidden";
 import FlashcardsCounter from "./flashcardsCounter";
 import { login, sendRecall } from "@/app/db";
+import Client from "pocketbase";
 
 export default function FlashcardsStudy(params: {
   flashcards: Array<{ id: string; front: string; back: string }>;
 }) {
-  const pb = login();
+  const [pb, setPb] = useState(new Client());
   const getRandomIndex = () => {
     return Math.floor(params.flashcards.length * Math.random());
   };
@@ -17,6 +18,9 @@ export default function FlashcardsStudy(params: {
   var newRandomIndex = randomIndex;
   console.log("DEBUG FlashcardsStudy: flashcard Picked ", flashcard);
   console.log("DEBUG FlashcardsStudy flashcardSSSS: ", params.flashcards);
+  useEffect(() => {
+    setPb(login());
+  }, []);
   const next = (
     easy: number,
     flashcardId: string,
@@ -38,7 +42,10 @@ export default function FlashcardsStudy(params: {
       console.log(`setRandomIndex to ${newRandomIndex}`);
       setFlashcardCount((prev) => prev + 1);
       console.log("sendRecall: ", { flashcardId, timeFront, timeBack, easy });
-      sendRecall(pb, flashcardId, timeFront, timeBack, easy);
+      sendRecall(pb, flashcardId, timeFront, timeBack, easy).catch((error) => {
+        console.log("ERROR sendRecall: ", error);
+        throw error;
+      });
     }
   };
   return (
