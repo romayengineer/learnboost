@@ -5,6 +5,10 @@ import FlashcardsCounter from "./flashcardsCounter";
 import { getRecalls, login, sendRecall } from "@/app/db";
 import Client from "pocketbase";
 
+const getRandomIndex = (arrayData: Array<any>) => {
+  return Math.floor(arrayData.length * Math.random());
+};
+
 type GroupedRecalls = {
   [id: string]: { totalTime: number; totalEasy: number };
 };
@@ -46,10 +50,9 @@ export default function FlashcardsStudy(params: {
   flashcards: Array<{ id: string; front: string; back: string }>;
 }) {
   const [pb, setPb] = useState(new Client());
-  const getRandomIndex = () => {
-    return Math.floor(params.flashcards.length * Math.random());
-  };
-  const [randomIndex, setRandomIndex] = React.useState(getRandomIndex());
+  const [randomIndex, setRandomIndex] = React.useState(
+    getRandomIndex(params.flashcards)
+  );
   const [flashcardCount, setFlashcardCount] = React.useState(1);
   const [groupedRecalls, setGroupedRecalls] = React.useState(
     {} as GroupedRecalls
@@ -79,7 +82,7 @@ export default function FlashcardsStudy(params: {
       console.log("DEBUG flashcards.length > 1");
       while (newFlashcard.id === flashcard.id) {
         console.log("DEBUG newFlashcard == flashcard >>> true");
-        newRandomIndex = getRandomIndex();
+        newRandomIndex = getRandomIndex(params.flashcards);
         newFlashcard = params.flashcards[newRandomIndex];
       }
     }
