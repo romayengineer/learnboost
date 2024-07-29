@@ -1,18 +1,27 @@
 import { loginAsync, getFlashcards, getMaze } from "@/app/db";
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import SideBar from "@/components/sidebar";
 import MazeFlashcards from "@/components/mazeFlashcards";
 
 export default async function MazeID({ params }: { params: { id: string } }) {
   let mazeId = params.id;
   let db = await loginAsync();
-  let maze = (await getMaze(db, mazeId)) as unknown as { name: string };
-  let flashcards = (await getFlashcards(db, mazeId)) as unknown as Array<{
+  let maze = null;
+  let flashcards: Array<{
     front: string;
     back: string;
-  }>;
-  if (flashcards.length === 0) {
-    redirect("/not-found");
+  }> = [];
+  try {
+    maze = (await getMaze(db, mazeId)) as unknown as { name: string };
+    if (maze.name === undefined) {
+      notFound();
+    }
+    flashcards = (await getFlashcards(db, mazeId)) as unknown as Array<{
+      front: string;
+      back: string;
+    }>;
+  } catch (e) {
+    notFound();
   }
   return (
     <main>

@@ -7,7 +7,7 @@ export default async function MazePage() {
   var pb = await loginAsync();
   var mazes = await getMazes(pb);
   // TODO delete is for testing
-  mazes = Array.from({ length: 15 }, () => mazes[0]);
+  // mazes = Array.from({ length: 15 }, () => mazes[0]);
   return (
     <main>
       <SideBar />
