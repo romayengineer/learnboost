@@ -3,6 +3,7 @@ import React from "react";
 import EasyButtons from "./easyButtons";
 
 export default function FlashCardHidden(params: {
+  next: (x: number) => void;
   front: string;
   back: string;
 }) {
@@ -18,20 +19,28 @@ export default function FlashCardHidden(params: {
     <div
       style={{ width: "700px" }}
       className="p-6 p-4 border-4 collapse-open border bg-stone-300"
-      onClick={toggleShowBack}
     >
       <input type="radio" name="my-accordion-1" hidden />
-      <div className="collapse-title text-xl font-medium">
+      <div
+        style={{ height: "60px" }}
+        className="collapse-title text-xl font-medium"
+        onClick={toggleShowBack}
+      >
         <p>{params.front}</p>
       </div>
       {showBack && (
         <div>
           <br />
-          <div className="collapse-content">
+          <div style={{ height: "200px" }} className="collapse-content">
             <p>{params.back}</p>
           </div>
           <br />
-          <EasyButtons />
+          <EasyButtons
+            next={(easy) => {
+              setShowBack(false);
+              params.next(easy);
+            }}
+          />
         </div>
       )}
     </div>
