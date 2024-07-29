@@ -51,9 +51,10 @@ export default function FlashCardHidden(params: {
           <br />
           <EasyButtons
             next={(easy) => {
-              setBackTimeDiff(Date.now() - startTime);
+              var _backTimeDiff = Date.now() - startTime;
+              setBackTimeDiff(_backTimeDiff);
               setShowBack(false);
-              params.next(easy, params.id, frontTimeDiff, backTimeDiff);
+              params.next(easy, params.id, frontTimeDiff, _backTimeDiff);
             }}
           />
         </div>

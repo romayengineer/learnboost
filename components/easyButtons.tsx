@@ -1,4 +1,4 @@
-export default function EasyButtons(params: { next: (x: number) => void }) {
+export default function EasyButtons(params: { next: (easy: number) => void }) {
   // Levels of difficulty:
   // Easy
   // Medium
