@@ -1,12 +1,27 @@
-import { loginAsync, getMazes, getRecall } from "../db";
+"use client";
+import { useEffect, useState } from "react";
+import { login, getMazes, getRecall } from "../db";
 
 import SideBar from "@/components/sidebar";
 import Maze from "../../components/maze";
+import { RecordModel } from "pocketbase";
 
-export default async function MazePage() {
-  var pb = await loginAsync();
-  var mazes = await getMazes(pb);
-  var recalls = await getRecall(pb);
+export default function MazePage() {
+  const [mazes, setMazes] = useState(Array<RecordModel>);
+  const [recalls, setRecalls] = useState(Array<RecordModel>);
+  useEffect(() => {
+    var pb = login();
+    const promMazes = async () => {
+      console.log("getMazes");
+      setMazes(await getMazes(pb));
+    };
+    const promRecalls = async () => {
+      console.log("getRecall");
+      setRecalls(await getRecall(pb));
+    };
+    promMazes();
+    promRecalls();
+  }, []);
   return (
     <main>
       <SideBar />

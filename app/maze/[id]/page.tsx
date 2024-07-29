@@ -1,33 +1,49 @@
+"use client";
 import Image from "next/image";
-import { loginAsync, getFlashcards, getMaze } from "@/app/db";
+import { useState, useEffect } from "react";
+import { login, getFlashcards, getMaze } from "@/app/db";
 import { notFound } from "next/navigation";
 import SideBar from "@/components/sidebar";
 import MazeFlashcards from "@/components/mazeFlashcards";
 
-export default async function MazeID({ params }: { params: { id: string } }) {
+export default function MazeID({ params }: { params: { id: string } }) {
   let mazeId = params.id;
-  let db = await loginAsync();
-  let maze = null;
-  let flashcards: Array<{
-    front: string;
-    back: string;
-  }> = [];
-  // TODO the try catch block is commented because vercel throws
-  // Dynamic server usage: no-store fetch
-  // try {
-  maze = (await getMaze(db, mazeId)) as unknown as { name: string };
-  if (maze.name === undefined) {
-    notFound();
-  }
-  console.log("DEBUG maze: ", maze);
-  flashcards = (await getFlashcards(db, mazeId)) as unknown as Array<{
-    front: string;
-    back: string;
-  }>;
-  console.log("DEBUG flashcards: ", flashcards);
-  // } catch (e) {
-  //   notFound();
-  // }
+  const [maze, setMaze] = useState({ name: "" });
+  const [flashcards, setFlashcards] = useState(
+    Array<{
+      front: string;
+      back: string;
+    }>
+  );
+
+  useEffect(() => {
+    let pb = login();
+    // TODO the try catch block is commented because vercel throws
+    // Dynamic server usage: no-store fetch
+    const promMaze = async () => {
+      const mazeData = (await getMaze(pb, mazeId)) as unknown as {
+        name: string;
+      };
+      if (mazeData.name === undefined) {
+        notFound();
+      }
+      setMaze(mazeData);
+      console.log("DEBUG maze: ", mazeData);
+    };
+    const promFlashcards = async () => {
+      const flashcardsData = (await getFlashcards(
+        pb,
+        mazeId
+      )) as unknown as Array<{
+        front: string;
+        back: string;
+      }>;
+      setFlashcards(flashcardsData);
+      console.log("DEBUG flashcards: ", flashcardsData);
+    };
+    promMaze();
+    promFlashcards();
+  }, [mazeId]);
   return (
     <main>
       <SideBar />
