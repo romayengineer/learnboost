@@ -110,6 +110,8 @@ export default function FlashcardsStudy(params: {
           },
         ];
         console.log("DEBUG newRecalls: ", newRecalls);
+        const groupedRecallsData = groupRecallsByFlashcardId(newRecalls);
+        setGroupedRecalls(groupedRecallsData);
         return newRecalls;
       });
     }
