@@ -9,10 +9,27 @@ import { getRandomIndex, groupRecallsByFlashcardId } from "@/app/dbUtils";
 import { getHardestAndLeastTimeRecalls } from "@/app/dbUtils";
 import { Flashcard } from "@/app/dbTypes";
 
+export function findFlashcardWithId(
+  flashcards: Array<Flashcard>,
+  flashcardId: string
+): Flashcard | undefined {
+  for (const arrayIndex in flashcards) {
+    var flashcardData = flashcards[arrayIndex];
+    if (flashcardData.id === flashcardId) {
+      console.log("DEBUG findFlashcardWithId: found true");
+      return flashcardData;
+    }
+  }
+  console.log("DEBUG findFlashcardWithId: found false");
+  console.log("DEBUG findFlashcardWithId: ", flashcards);
+  console.log("DEBUG findFlashcardWithId: ", flashcardId);
+}
+
 export default function FlashcardsStudy(params: {
   flashcards: Array<Flashcard>;
 }) {
   const [pb, setPb] = useState(new Client());
+  const [hardestFlashcardId, setHardestFlashcardId] = React.useState("");
   const [lastFlashcard, setLastFlashcard] = React.useState(
     (params.flashcards.length > 0
       ? params.flashcards[getRandomIndex(params.flashcards)]
@@ -22,8 +39,18 @@ export default function FlashcardsStudy(params: {
           back: "",
         }) as Flashcard
   );
-  if (lastFlashcard.id === "" && params.flashcards.length > 0) {
-    setLastFlashcard(params.flashcards[getRandomIndex(params.flashcards)]);
+  if (
+    lastFlashcard.id === "" &&
+    hardestFlashcardId !== "" &&
+    params.flashcards.length > 0
+  ) {
+    const newLastFlashcard = findFlashcardWithId(
+      params.flashcards,
+      hardestFlashcardId
+    );
+    if (newLastFlashcard !== undefined) {
+      setLastFlashcard(newLastFlashcard);
+    }
   }
   const [flashcardCount, setFlashcardCount] = React.useState(1);
   const [groupedRecalls, setGroupedRecalls] = React.useState(
@@ -41,6 +68,17 @@ export default function FlashcardsStudy(params: {
       const groupedRecallsData = groupRecallsByFlashcardId(newRecalls);
       setGroupedRecalls(groupedRecallsData);
       const hardestRecalls = getHardestAndLeastTimeRecalls(groupedRecallsData);
+      if (hardestRecalls.length > 0) {
+        const newHardestFlashcardId = hardestRecalls[0].flashcardId;
+        setHardestFlashcardId(newHardestFlashcardId);
+        const newLastFlashcard = findFlashcardWithId(
+          params.flashcards,
+          newHardestFlashcardId
+        );
+        if (newLastFlashcard !== undefined) {
+          setLastFlashcard(newLastFlashcard);
+        }
+      }
       console.log("DEBUG hardestRecalls: ", hardestRecalls);
       setRecalls(newRecalls);
     };
@@ -72,7 +110,7 @@ export default function FlashcardsStudy(params: {
         throw error;
       });
       setRecalls((oldRecalls) => {
-        const newRecalls = [
+        const newRecalls: Array<RecallData> = [
           ...oldRecalls,
           {
             easy: data.easy,
@@ -87,6 +125,17 @@ export default function FlashcardsStudy(params: {
         const hardestRecalls =
           getHardestAndLeastTimeRecalls(groupedRecallsData);
         console.log("DEBUG hardestRecalls: ", hardestRecalls);
+        if (hardestRecalls.length > 0) {
+          const newHardestFlashcardId = hardestRecalls[0].flashcardId;
+          setHardestFlashcardId(newHardestFlashcardId);
+          const newLastFlashcard = findFlashcardWithId(
+            params.flashcards,
+            newHardestFlashcardId
+          );
+          if (newLastFlashcard !== undefined) {
+            setLastFlashcard(newLastFlashcard);
+          }
+        }
         return newRecalls;
       });
     }
