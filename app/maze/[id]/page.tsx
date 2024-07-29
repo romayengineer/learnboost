@@ -5,16 +5,17 @@ import { login, getFlashcards, getMaze } from "@/app/db";
 import { notFound } from "next/navigation";
 import SideBar from "@/components/sidebar";
 import MazeFlashcards from "@/components/mazeFlashcards";
+import { Flashcard } from "@/app/dbTypes";
+import {
+  getLocalFlashcards,
+  getLocalMaze,
+  setLocalFlashcards,
+} from "@/app/pbLocalStorage";
 
 export default function MazeID({ params }: { params: { id: string } }) {
   let mazeId = params.id;
   const [maze, setMaze] = useState({ name: "" });
-  const [flashcards, setFlashcards] = useState(
-    Array<{
-      front: string;
-      back: string;
-    }>
-  );
+  const [flashcards, setFlashcards] = useState([] as Array<Flashcard>);
 
   useEffect(() => {
     let pb = login();
@@ -31,16 +32,26 @@ export default function MazeID({ params }: { params: { id: string } }) {
       console.log("DEBUG MazeID mazeData: ", mazeData);
     };
     const promFlashcards = async () => {
-      const flashcardsData = (await getFlashcards(
-        pb,
-        mazeId
-      )) as unknown as Array<{
-        front: string;
-        back: string;
-      }>;
+      const awaitedFlashcards = await getFlashcards(pb, mazeId);
+      const flashcardsData = awaitedFlashcards as unknown as Array<Flashcard>;
       setFlashcards(flashcardsData);
+      setLocalFlashcards(awaitedFlashcards);
       console.log("DEBUG MazeID flashcardsData: ", flashcardsData);
     };
+    const localFlashcards = getLocalFlashcards() as unknown as Array<Flashcard>;
+    setFlashcards(localFlashcards);
+    console.log(
+      "DEBUG MazeID useEffect: setting flashcards from local ",
+      localFlashcards
+    );
+    const localMaze = getLocalMaze(mazeId);
+    if (localMaze.length === 1) {
+      setMaze(localMaze[0] as unknown as { name: string });
+      console.log(
+        "DEBUG MazeID useEffect: setting maze from local ",
+        localMaze[0]
+      );
+    }
     promMaze();
     promFlashcards();
   }, [mazeId]);

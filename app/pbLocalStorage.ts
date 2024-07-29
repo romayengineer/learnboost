@@ -49,6 +49,10 @@ export function getLocalMazes(): Array<RecordModel> {
     return getLocal(models.mazes);
 }
 
+export function getLocalMaze(mazeId: string): Array<RecordModel> {
+    return getLocal(models.mazes).filter((maze) => maze.id === mazeId);
+}
+
 export function getLocalFlashcards(): Array<RecordModel> {
     return getLocal(models.flashcards);
 }
