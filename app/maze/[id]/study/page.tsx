@@ -5,11 +5,11 @@ import FlashcardsStudy from "@/components/flashcardsStudy";
 
 export default function StudyMazeID({ params }: { params: { id: string } }) {
   let mazeId = params.id;
-  let pb = login();
   const [flashcards, setFlashcards] = useState([
     { id: "", front: "", back: "" },
   ]);
   useEffect(() => {
+    let pb = login();
     const promFlashcards = async () => {
       let flashcardsData = (await getFlashcards(
         pb,
@@ -23,7 +23,7 @@ export default function StudyMazeID({ params }: { params: { id: string } }) {
       console.log("DEBUG flashcards: ", flashcardsData);
     };
     promFlashcards();
-  }, [pb, mazeId]);
+  }, [mazeId]);
   return (
     <main>
       <div className="flex flex-row justify-center items-center">

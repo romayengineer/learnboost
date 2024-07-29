@@ -7,10 +7,10 @@ import Maze from "../../components/maze";
 import { RecordModel } from "pocketbase";
 
 export default function MazePage() {
-  var pb = login();
   const [mazes, setMazes] = useState(Array<RecordModel>);
   const [recalls, setRecalls] = useState(Array<RecordModel>);
   useEffect(() => {
+    var pb = login();
     const promMazes = async () => {
       console.log("getMazes");
       setMazes(await getMazes(pb));
@@ -21,7 +21,7 @@ export default function MazePage() {
     };
     promMazes();
     promRecalls();
-  }, [pb]);
+  }, []);
   return (
     <main>
       <SideBar />

@@ -1,5 +1,4 @@
 "use client";
-
 import React from "react";
 import FlashCardHidden from "@/components/flashcardHidden";
 import FlashcardsCounter from "./flashcardsCounter";
