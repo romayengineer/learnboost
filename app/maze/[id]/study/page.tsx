@@ -10,6 +10,7 @@ export default async function StudyMazeID({
   let mazeId = params.id;
   let db = await loginAsync();
   let flashcards = (await getFlashcards(db, mazeId)) as unknown as Array<{
+    id: string;
     front: string;
     back: string;
   }>;

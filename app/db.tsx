@@ -56,7 +56,7 @@ export async function getFlashcards(
   });
 }
 
-export async function sendRecall(
+export function sendRecall(
   pb: PocketBase,
   flashcardId: string,
   timeFront: number,

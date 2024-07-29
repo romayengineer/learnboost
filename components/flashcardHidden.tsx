@@ -3,7 +3,8 @@ import React from "react";
 import EasyButtons from "./easyButtons";
 
 export default function FlashCardHidden(params: {
-  next: (x: number) => void;
+  next: (easy: number, flashcardId: string) => void;
+  id: string;
   front: string;
   back: string;
 }) {
@@ -42,7 +43,7 @@ export default function FlashCardHidden(params: {
           <EasyButtons
             next={(easy) => {
               setShowBack(false);
-              params.next(easy);
+              params.next(easy, params.id);
             }}
           />
         </div>
