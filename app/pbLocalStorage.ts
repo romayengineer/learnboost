@@ -1,5 +1,10 @@
 import { RecordModel } from "pocketbase";
 
+const models = {
+    recalls: "recalls",
+    mazes: "mazes",
+}
+
 function setLocal(modelName: string, arrayData: Array<any>) {
     if (typeof window === "undefined") {
         console.log("DEBUG setLocal window: undefined");
@@ -9,30 +14,28 @@ function setLocal(modelName: string, arrayData: Array<any>) {
     window.localStorage.setItem(modelName, dataStringify);
 }
 
+function getLocal(modelName: string): Array<RecordModel> {
+    if (typeof window === "undefined") {
+        console.log("DEBUG getLocal window: undefined");
+        return [];
+    }
+    var lovalString = window.localStorage.getItem(modelName) || "[]";
+    var LocalValue: Array<RecordModel> = JSON.parse(lovalString);
+    return LocalValue;
+}
+
 export function setLocalRecalls(recalls: Array<RecordModel>) {
-    setLocal("recalls", recalls);
+    setLocal(models.recalls, recalls);
 }
 
 export function setLocalMazes(mazes: Array<RecordModel>) {
-    setLocal("mazes", mazes);
+    setLocal(models.mazes, mazes);
 }
 
 export function getLocalRecalls(): Array<RecordModel> {
-    if (typeof window === "undefined") {
-        console.log("DEBUG getLocalRecalls window: undefined");
-        return [];
-    }
-    var lovalValue = window.localStorage.getItem("recalls") || "[]";
-    var localRecalls: Array<RecordModel> = JSON.parse(lovalValue);
-    return localRecalls;
+    return getLocal(models.recalls);
 }
 
 export function getLocalMazes(): Array<RecordModel> {
-    if (typeof window === "undefined") {
-        console.log("DEBUG getLocalMazes window: undefined");
-        return [];
-    }
-    var lovalValue = window.localStorage.getItem("mazes") || "[]";
-    var localMazes: Array<RecordModel> = JSON.parse(lovalValue);
-    return localMazes;
+    return getLocal(models.mazes);
 }
