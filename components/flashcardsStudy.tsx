@@ -53,29 +53,38 @@ export default function FlashcardsStudy(params: {
       setLastFlashcard(newLastFlashcard);
     }
   }
-  console.log("DEBUG FlashcardsStudy: lastFlashcard ", lastFlashcard);
+  console.log("DEBUG FlashcardsStudy lastFlashcard: ", lastFlashcard);
   console.log("DEBUG FlashcardsStudy params.flashcards: ", params.flashcards);
   console.log("DEBUG FlashcardsStudy groupedRecalls: ", groupedRecalls);
+  const onRecallsUpdate = (newRecalls: Array<RecallData>) => {
+    console.log(
+      "DEBUG FlashcardsStudy onRecallsUpdate newRecalls: ",
+      newRecalls
+    );
+    const groupedRecallsData = groupRecallsByFlashcardId(newRecalls);
+    setGroupedRecalls(groupedRecallsData);
+    const hardestRecalls = getHardestAndLeastTimeRecalls(groupedRecallsData);
+    if (hardestRecalls.length > 0) {
+      const newHardestFlashcardId = hardestRecalls[0].flashcardId;
+      setHardestFlashcardId(newHardestFlashcardId);
+      const newLastFlashcard = findFlashcardWithId(
+        params.flashcards,
+        newHardestFlashcardId
+      );
+      if (newLastFlashcard !== undefined) {
+        setLastFlashcard(newLastFlashcard);
+      }
+    }
+    console.log(
+      "DEBUG FlashcardsStudy onRecallsUpdate hardestRecalls: ",
+      hardestRecalls
+    );
+  };
   React.useEffect(() => {
     const newPb = login();
     const promRecalls = async () => {
       const newRecalls = (await getRecalls(newPb)) as unknown as RecallsData;
-      console.log("DEBUG FlashcardsStudy newRecalls: ", newRecalls);
-      const groupedRecallsData = groupRecallsByFlashcardId(newRecalls);
-      setGroupedRecalls(groupedRecallsData);
-      const hardestRecalls = getHardestAndLeastTimeRecalls(groupedRecallsData);
-      if (hardestRecalls.length > 0) {
-        const newHardestFlashcardId = hardestRecalls[0].flashcardId;
-        setHardestFlashcardId(newHardestFlashcardId);
-        const newLastFlashcard = findFlashcardWithId(
-          params.flashcards,
-          newHardestFlashcardId
-        );
-        if (newLastFlashcard !== undefined) {
-          setLastFlashcard(newLastFlashcard);
-        }
-      }
-      console.log("DEBUG FlashcardsStudy hardestRecalls: ", hardestRecalls);
+      onRecallsUpdate(newRecalls);
       setRecalls(newRecalls);
     };
     setPb(newPb);
@@ -105,22 +114,7 @@ export default function FlashcardsStudy(params: {
           timeBack: data.timeBack,
         },
       ];
-      console.log("DEBUG FlashcardsStudy newRecalls: ", newRecalls);
-      const groupedRecallsData = groupRecallsByFlashcardId(newRecalls);
-      setGroupedRecalls(groupedRecallsData);
-      const hardestRecalls = getHardestAndLeastTimeRecalls(groupedRecallsData);
-      console.log("DEBUG FlashcardsStudy hardestRecalls: ", hardestRecalls);
-      if (hardestRecalls.length > 0) {
-        const newHardestFlashcardId = hardestRecalls[0].flashcardId;
-        setHardestFlashcardId(newHardestFlashcardId);
-        const newLastFlashcard = findFlashcardWithId(
-          params.flashcards,
-          newHardestFlashcardId
-        );
-        if (newLastFlashcard !== undefined) {
-          setLastFlashcard(newLastFlashcard);
-        }
-      }
+      onRecallsUpdate(newRecalls);
       return newRecalls;
     });
   };
