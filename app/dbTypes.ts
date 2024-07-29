@@ -3,7 +3,13 @@ export type GroupedRecalls = {
         totalTime: number;
         totalEasy: number
     };
-  };
+};
+
+export type GroupedRecallItem = {
+    flashcardId: string,
+    totalTime: number,
+    totalEasy: number,
+}
 
 export type RecallData = {
     flashcardId: string;
@@ -14,4 +20,4 @@ export type RecallData = {
 
 export type RecallsData = Array<RecallData>;
 
-export type SortedRecallsByEasyAndTime = Array<RecallData>;
+export type SortedRecallsByEasyAndTime = Array<GroupedRecallItem>;
