@@ -19,10 +19,12 @@ export default async function MazeID({ params }: { params: { id: string } }) {
   if (maze.name === undefined) {
     notFound();
   }
+  console.log("DEBUG maze: ", maze);
   flashcards = (await getFlashcards(db, mazeId)) as unknown as Array<{
     front: string;
     back: string;
   }>;
+  console.log("DEBUG flashcards: ", flashcards);
   // } catch (e) {
   //   notFound();
   // }
