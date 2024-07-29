@@ -12,18 +12,20 @@ export default async function MazeID({ params }: { params: { id: string } }) {
     front: string;
     back: string;
   }> = [];
-  try {
-    maze = (await getMaze(db, mazeId)) as unknown as { name: string };
-    if (maze.name === undefined) {
-      notFound();
-    }
-    flashcards = (await getFlashcards(db, mazeId)) as unknown as Array<{
-      front: string;
-      back: string;
-    }>;
-  } catch (e) {
+  // TODO the try catch block is commented because vercel throws
+  // Dynamic server usage: no-store fetch
+  // try {
+  maze = (await getMaze(db, mazeId)) as unknown as { name: string };
+  if (maze.name === undefined) {
     notFound();
   }
+  flashcards = (await getFlashcards(db, mazeId)) as unknown as Array<{
+    front: string;
+    back: string;
+  }>;
+  // } catch (e) {
+  //   notFound();
+  // }
   return (
     <main>
       <SideBar />
