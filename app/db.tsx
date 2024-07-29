@@ -15,11 +15,18 @@ export async function loginAsync() {
 }
 
 export function login() {
-  const pb = new PocketBase(process.env.NEXT_PUBLIC_PB_URL);
+  // TODO remove this is for testing in Vercel
+  var NEXT_PUBLIC_PB_URL = process.env.NEXT_PUBLIC_PB_URL || "dummy.com";
+  var NEXT_PUBLIC_DB_USER_NAME =
+    process.env.NEXT_PUBLIC_DB_USER_NAME || "dummyUsername";
+  var NEXT_PUBLIC_DB_PASSWORD =
+    process.env.NEXT_PUBLIC_DB_PASSWORD || "dummyPassword";
+
+  const pb = new PocketBase(NEXT_PUBLIC_PB_URL);
 
   pb.admins.authWithPassword(
-    process.env.NEXT_PUBLIC_DB_USER_NAME!,
-    process.env.NEXT_PUBLIC_DB_PASSWORD!,
+    NEXT_PUBLIC_DB_USER_NAME!,
+    NEXT_PUBLIC_DB_PASSWORD!,
     {
       cache: "no-store",
     }
