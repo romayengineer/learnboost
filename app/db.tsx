@@ -32,6 +32,9 @@ export function login() {
     NEXT_PUBLIC_DB_PASSWORD!,
     {
       cache: "no-store",
+      // to avoid vercel error
+      // Dynamic server usage: no-store fetch
+      next: { revalidate: 0 },
     }
   );
 
