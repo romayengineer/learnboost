@@ -14,7 +14,7 @@ export async function loginAsync() {
     NEXT_PUBLIC_DB_USER_NAME!,
     NEXT_PUBLIC_DB_PASSWORD!,
     {
-      // cache: "no-store",
+      cache: "no-store",
       // to avoid vercel error
       // Dynamic server usage: no-store fetch
       // this option causes TypeError: Invalid URL
