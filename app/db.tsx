@@ -70,3 +70,8 @@ export function sendRecall(
     easy: easy,
   });
 }
+
+// TODO filter by day
+export function getRecall(pb: PocketBase): Promise<RecordModel[]> {
+  return pb.collection("recalls").getFullList();
+}
