@@ -60,13 +60,21 @@ export function sendRecall(
   timeFront: number,
   timeBack: number,
   easy: number
-): Promise<RecordModel[]> {
-  return pb.collection("recalls").create({
+): Promise<RecordModel> {
+  const data = {
     flashcardId: flashcardId,
     timeFront: timeFront,
     timeBack: timeBack,
     easy: easy,
-  });
+  };
+  return pb
+    .collection("recalls")
+    .create(data)
+    .catch((error) => {
+      console.error("Error: ", error);
+      console.error("Error Args: ", data);
+      throw error;
+    });
 }
 
 // TODO filter by day

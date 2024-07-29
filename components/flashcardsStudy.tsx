@@ -8,13 +8,17 @@ import { login, sendRecall } from "@/app/db";
 export default function FlashcardsStudy(params: {
   flashcards: Array<{ id: string; front: string; back: string }>;
 }) {
-  var pb = login();
-  var randomIndex = 0;
-  var [flashcardCount, setFlashcardCount] = React.useState(1);
-  var [flashcard, setFlashcard] = React.useState(
-    params.flashcards[randomIndex]
-  );
-  var next = (
+  const pb = login();
+  const getRandomIndex = () => {
+    return Math.floor(params.flashcards.length * Math.random());
+  };
+  const [randomIndex, setRandomIndex] = React.useState(getRandomIndex());
+  const [flashcardCount, setFlashcardCount] = React.useState(1);
+  const flashcard = params.flashcards[randomIndex];
+  var newRandomIndex = randomIndex;
+  console.log("DEBUG FlashcardsStudy: flashcard Picked ", flashcard);
+  console.log("DEBUG FlashcardsStudy flashcardSSSS: ", params.flashcards);
+  const next = (
     easy: number,
     flashcardId: string,
     timeFront: number,
@@ -23,14 +27,18 @@ export default function FlashcardsStudy(params: {
     // easy goes from 0 to 3
     var newFlashcard = flashcard;
     if (params.flashcards.length > 1) {
-      while (newFlashcard == flashcard) {
-        var randomIndex = Math.floor(Math.random() * params.flashcards.length);
-        newFlashcard = params.flashcards[randomIndex];
+      console.log("flashcards.length > 1");
+      while (newFlashcard.id === flashcard.id) {
+        console.log("newFlashcard == flashcard >>> true");
+        newRandomIndex = getRandomIndex();
+        newFlashcard = params.flashcards[newRandomIndex];
       }
     }
     if (newFlashcard != flashcard) {
-      setFlashcard(newFlashcard);
+      setRandomIndex(newRandomIndex);
+      console.log(`setRandomIndex to ${newRandomIndex}`);
       setFlashcardCount((prev) => prev + 1);
+      console.log("sendRecall: ", { flashcardId, timeFront, timeBack, easy });
       sendRecall(pb, flashcardId, timeFront, timeBack, easy);
     }
   };
