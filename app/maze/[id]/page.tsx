@@ -8,7 +8,7 @@ import MazeFlashcards from "@/components/mazeFlashcards";
 
 export default function MazeID({ params }: { params: { id: string } }) {
   let mazeId = params.id;
-  let db = login();
+  let pb = login();
   const [maze, setMaze] = useState({ name: "" });
   const [flashcards, setFlashcards] = useState(
     Array<{
@@ -21,7 +21,7 @@ export default function MazeID({ params }: { params: { id: string } }) {
     // TODO the try catch block is commented because vercel throws
     // Dynamic server usage: no-store fetch
     const promMaze = async () => {
-      const mazeData = (await getMaze(db, mazeId)) as unknown as {
+      const mazeData = (await getMaze(pb, mazeId)) as unknown as {
         name: string;
       };
       if (mazeData.name === undefined) {
@@ -32,7 +32,7 @@ export default function MazeID({ params }: { params: { id: string } }) {
     };
     const promFlashcards = async () => {
       const flashcardsData = (await getFlashcards(
-        db,
+        pb,
         mazeId
       )) as unknown as Array<{
         front: string;
@@ -43,7 +43,7 @@ export default function MazeID({ params }: { params: { id: string } }) {
     };
     promMaze();
     promFlashcards();
-  }, []);
+  }, [pb, mazeId]);
   return (
     <main>
       <SideBar />

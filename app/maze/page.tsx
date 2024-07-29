@@ -21,7 +21,7 @@ export default function MazePage() {
     };
     promMazes();
     promRecalls();
-  }, []);
+  }, [pb]);
   return (
     <main>
       <SideBar />
