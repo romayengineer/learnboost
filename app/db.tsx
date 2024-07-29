@@ -1,11 +1,18 @@
 import PocketBase, { RecordModel } from "pocketbase";
 
+// TODO remove this is for testing in Vercel
+var NEXT_PUBLIC_PB_URL = process.env.NEXT_PUBLIC_PB_URL || "http://dummy.com";
+var NEXT_PUBLIC_DB_USER_NAME =
+  process.env.NEXT_PUBLIC_DB_USER_NAME || "dummyUsername";
+var NEXT_PUBLIC_DB_PASSWORD =
+  process.env.NEXT_PUBLIC_DB_PASSWORD || "dummyPassword";
+
 export async function loginAsync() {
-  const pb = new PocketBase(process.env.NEXT_PUBLIC_PB_URL);
+  const pb = new PocketBase(NEXT_PUBLIC_PB_URL);
 
   await pb.admins.authWithPassword(
-    process.env.NEXT_PUBLIC_DB_USER_NAME!,
-    process.env.NEXT_PUBLIC_DB_PASSWORD!,
+    NEXT_PUBLIC_DB_USER_NAME!,
+    NEXT_PUBLIC_DB_PASSWORD!,
     {
       // cache: "no-store",
       // to avoid vercel error
@@ -19,13 +26,6 @@ export async function loginAsync() {
 }
 
 export function login() {
-  // TODO remove this is for testing in Vercel
-  var NEXT_PUBLIC_PB_URL = process.env.NEXT_PUBLIC_PB_URL || "dummy.com";
-  var NEXT_PUBLIC_DB_USER_NAME =
-    process.env.NEXT_PUBLIC_DB_USER_NAME || "dummyUsername";
-  var NEXT_PUBLIC_DB_PASSWORD =
-    process.env.NEXT_PUBLIC_DB_PASSWORD || "dummyPassword";
-
   const pb = new PocketBase(NEXT_PUBLIC_PB_URL);
 
   pb.admins.authWithPassword(
