@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import SideBar from "@/components/sidebar";
 import { login, createMaze } from "@/app/db";
 
@@ -46,11 +47,14 @@ export default function NewMaze() {
             ></textarea>
           </div>
           <button>
-            <img
+            <Image
+              width={32}
+              height={32}
+              style={{ width: "auto" }}
               className="w-10 mb-2 mr-2 inline mt-1"
               src="/plus-sign-1.png"
               alt="Add New Maze"
-            ></img>
+            />
             Create
           </button>
         </form>

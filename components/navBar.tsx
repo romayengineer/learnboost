@@ -1,9 +1,13 @@
+import Image from "next/image";
 export default function NavBar() {
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <a href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
-          <img
+          <Image
+            width={50}
+            height={32}
+            style={{ width: "auto" }}
             src="/learnboost-logo.png"
             className="h-8"
             alt="Learnboost Logo"
