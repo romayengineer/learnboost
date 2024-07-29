@@ -1,4 +1,6 @@
 import { login, getMazes } from "../db";
+
+import SideBar from "@/components/sidebar";
 import Maze from "../../components/maze";
 
 export default async function MazePage() {
@@ -7,13 +9,16 @@ export default async function MazePage() {
   // TODO delete is for testing
   mazes = Array.from({ length: 15 }, () => mazes[0]);
   return (
-    <main className="p-6">
-      <h1 className="text-2xl">Here are all your mazes!</h1>
-      <br />
-      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-        {mazes.map((maze) => {
-          return <Maze mazeId={maze.id} mazeName={maze.name} />;
-        })}
+    <main>
+      <SideBar />
+      <div className="p-6">
+        <h1 className="text-2xl">Here are all your mazes!</h1>
+        <br />
+        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+          {mazes.map((maze) => {
+            return <Maze mazeId={maze.id} mazeName={maze.name} />;
+          })}
+        </div>
       </div>
     </main>
   );

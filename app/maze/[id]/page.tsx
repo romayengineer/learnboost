@@ -1,5 +1,6 @@
 import { login, getFlashcards, getMaze } from "@/app/db";
 import { redirect } from "next/navigation";
+import SideBar from "@/components/sidebar";
 import MazeFlashcards from "@/components/mazeFlashcards";
 
 export default async function MazeID({ params }: { params: { id: string } }) {
@@ -13,15 +14,14 @@ export default async function MazeID({ params }: { params: { id: string } }) {
   if (flashcards.length === 0) {
     redirect("/not-found");
   }
-  const gotoStudy = () => {
-    const href = window.location.href;
-    redirect(`${href}/study`);
-  };
   return (
-    <main className="p-10">
-      <h1 className="text-2xl inline underline">{maze.name}</h1>
-      <br />
-      <MazeFlashcards mazeId={mazeId} flashcards={flashcards} />
+    <main>
+      <SideBar />
+      <div className="p-10">
+        <h1 className="text-2xl inline underline">{maze.name}</h1>
+        <br />
+        <MazeFlashcards mazeId={mazeId} flashcards={flashcards} />
+      </div>
     </main>
   );
 }
