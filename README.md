@@ -8,6 +8,14 @@ Go see the demo 👉 [learnboost.vercel.app](https://learnboost.vercel.app/)
 
 ![LearnBoost Home](public/screenshots-home.jpg)
 
-## LearnBoost Mazes
+## LearnBoost All Mazes
 
-![LearnBoost Study](public/screenshots-mazes.jpg)
+![LearnBoost All Mazes](public/screenshots-mazes.jpg)
+
+## LearnBoost One Maze
+
+![LearnBoost One Maze](public/screenshots-maze.jpg)
+
+## LearnBoost Study a Maze
+
+![LearnBoost Study](public/screenshots-study.jpg)
