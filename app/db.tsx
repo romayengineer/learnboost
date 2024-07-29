@@ -26,3 +26,18 @@ export async function getFlashcards(
     filter: `mazeId.id ?= "${mazeId}"`,
   });
 }
+
+export async function sendRecall(
+  pb: PocketBase,
+  flashcardId: string,
+  timeFront: number,
+  timeBack: number,
+  easy: number
+): Promise<RecordModel[]> {
+  return pb.collection("recalls").create({
+    flashcardId: flashcardId,
+    timeFront: timeFront,
+    timeBack: timeBack,
+    easy: easy,
+  });
+}
