@@ -21,23 +21,6 @@ export function findFlashcardWithId(
   }
 }
 
-function setLastFlashcardIfFound(
-  lastFlashcard: Flashcard,
-  hardestFlashcardId: string,
-  flashcards: Array<Flashcard>,
-  setLastFlashcard: React.Dispatch<React.SetStateAction<Flashcard>>
-) {
-  if (!lastFlashcard.id && hardestFlashcardId !== "" && flashcards.length > 0) {
-    const newLastFlashcard = findFlashcardWithId(
-      flashcards,
-      hardestFlashcardId
-    );
-    if (newLastFlashcard !== undefined) {
-      setLastFlashcard(newLastFlashcard);
-    }
-  }
-}
-
 export default function FlashcardsStudy(params: {
   flashcards: Array<Flashcard>;
 }) {
@@ -51,12 +34,6 @@ export default function FlashcardsStudy(params: {
   const [hardestFlashcardId, setHardestFlashcardId] = React.useState("");
   const [lastFlashcard, setLastFlashcard] = React.useState({} as Flashcard);
   const [recalls, setRecalls] = React.useState([] as RecallsData);
-  setLastFlashcardIfFound(
-    lastFlashcard,
-    hardestFlashcardId,
-    params.flashcards,
-    setLastFlashcard
-  );
   console.log("DEBUG FlashcardsStudy lastFlashcard: ", lastFlashcard);
   console.log("DEBUG FlashcardsStudy params.flashcards: ", params.flashcards);
   // updates lastFlashcard from recalls
@@ -85,6 +62,12 @@ export default function FlashcardsStudy(params: {
   };
   // get the recalls
   React.useEffect(() => {
+    /**
+     * We need to set the lastFlashcards and for that we need
+     * to have the flashcards Array if not there is no need to get the recalls
+     * as having no flashcards the lastFlashcards will be null
+     */
+    if (params.flashcards.length == 0) return;
     const newPb = login();
     const promRecalls = async () => {
       const newRecalls = (await getRecalls(newPb)) as unknown as RecallsData;
@@ -100,7 +83,7 @@ export default function FlashcardsStudy(params: {
     );
     setPb(newPb);
     promRecalls();
-  }, []);
+  }, [params.flashcards.length]);
   const next = (data: RecallData) => {
     console.log("DEBUG FlashcardsStudy next data: ", data);
     sendRecall(
