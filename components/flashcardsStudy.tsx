@@ -31,7 +31,6 @@ export default function FlashcardsStudy(params: {
    * and the lastFlashcard (the one that is shown)
    */
   const [pb, setPb] = React.useState(new Client());
-  const [hardestFlashcardId, setHardestFlashcardId] = React.useState("");
   const [lastFlashcard, setLastFlashcard] = React.useState({} as Flashcard);
   const [recalls, setRecalls] = React.useState([] as RecallsData);
   console.log("DEBUG FlashcardsStudy lastFlashcard: ", lastFlashcard);
@@ -46,7 +45,6 @@ export default function FlashcardsStudy(params: {
     const hardestRecalls = getHardestAndLeastTimeRecalls(groupedRecallsData);
     if (hardestRecalls.length > 0) {
       const newHardestFlashcardId = hardestRecalls[0].flashcardId;
-      setHardestFlashcardId(newHardestFlashcardId);
       const newLastFlashcard = findFlashcardWithId(
         params.flashcards,
         newHardestFlashcardId
