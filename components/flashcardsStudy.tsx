@@ -94,15 +94,13 @@ export default function FlashcardsStudy(params: {
       throw error;
     });
     setRecalls((oldRecalls) => {
-      const newRecalls: Array<RecallData> = [
-        ...oldRecalls,
-        {
-          easy: data.easy,
-          flashcardId: data.flashcardId,
-          timeFront: data.timeFront,
-          timeBack: data.timeBack,
-        },
-      ];
+      const newRecall = {
+        easy: data.easy,
+        flashcardId: data.flashcardId,
+        timeFront: data.timeFront,
+        timeBack: data.timeBack,
+      };
+      const newRecalls = [...oldRecalls, newRecall];
       onRecallsUpdate(newRecalls);
       return newRecalls;
     });
