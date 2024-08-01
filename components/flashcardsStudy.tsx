@@ -17,13 +17,30 @@ export function findFlashcardWithId(
   for (const arrayIndex in flashcards) {
     var flashcardData = flashcards[arrayIndex];
     if (flashcardData.id === flashcardId) {
-      console.log("DEBUG findFlashcardWithId found: ", true);
       return flashcardData;
     }
   }
-  console.log("DEBUG findFlashcardWithId found: ", false);
-  console.log("DEBUG findFlashcardWithId flashcards: ", flashcards);
-  console.log("DEBUG findFlashcardWithId flashcardId: ", flashcardId);
+}
+
+function setLastFlashcardIfFound(
+  lastFlashcard: Flashcard,
+  hardestFlashcardId: string,
+  flashcards: Array<Flashcard>,
+  setLastFlashcard: React.Dispatch<React.SetStateAction<Flashcard>>
+) {
+  if (
+    lastFlashcard.id === "" &&
+    hardestFlashcardId !== "" &&
+    flashcards.length > 0
+  ) {
+    const newLastFlashcard = findFlashcardWithId(
+      flashcards,
+      hardestFlashcardId
+    );
+    if (newLastFlashcard !== undefined) {
+      setLastFlashcard(newLastFlashcard);
+    }
+  }
 }
 
 export default function FlashcardsStudy(params: {
@@ -41,19 +58,12 @@ export default function FlashcardsStudy(params: {
     {} as GroupedRecalls
   );
   const [recalls, setRecalls] = React.useState([] as RecallsData);
-  if (
-    lastFlashcard.id === "" &&
-    hardestFlashcardId !== "" &&
-    params.flashcards.length > 0
-  ) {
-    const newLastFlashcard = findFlashcardWithId(
-      params.flashcards,
-      hardestFlashcardId
-    );
-    if (newLastFlashcard !== undefined) {
-      setLastFlashcard(newLastFlashcard);
-    }
-  }
+  setLastFlashcardIfFound(
+    lastFlashcard,
+    hardestFlashcardId,
+    params.flashcards,
+    setLastFlashcard
+  );
   console.log("DEBUG FlashcardsStudy lastFlashcard: ", lastFlashcard);
   console.log("DEBUG FlashcardsStudy params.flashcards: ", params.flashcards);
   console.log("DEBUG FlashcardsStudy groupedRecalls: ", groupedRecalls);
