@@ -43,15 +43,14 @@ export default function FlashcardsStudy(params: {
     );
     const groupedRecallsData = groupRecallsByFlashcardId(newRecalls);
     const hardestRecalls = getHardestAndLeastTimeRecalls(groupedRecallsData);
-    if (hardestRecalls.length > 0) {
-      const newHardestFlashcardId = hardestRecalls[0].flashcardId;
-      const newLastFlashcard = findFlashcardWithId(
-        params.flashcards,
-        newHardestFlashcardId
-      );
-      if (newLastFlashcard !== undefined) {
-        setLastFlashcard(newLastFlashcard);
-      }
+    if (hardestRecalls.length == 0) return;
+    const newHardestFlashcardId = hardestRecalls[0].flashcardId;
+    const newLastFlashcard = findFlashcardWithId(
+      params.flashcards,
+      newHardestFlashcardId
+    );
+    if (newLastFlashcard !== undefined) {
+      setLastFlashcard(newLastFlashcard);
     }
     console.log(
       "DEBUG FlashcardsStudy onRecallsUpdate hardestRecalls: ",
