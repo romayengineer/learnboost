@@ -1,10 +1,9 @@
 "use client";
 import React from "react";
 import FlashCardHidden from "@/components/flashcardHidden";
-import FlashcardsCounter from "./flashcardsCounter";
 import { getRecalls, login, sendRecall } from "@/app/db";
 import Client from "pocketbase";
-import { GroupedRecalls, RecallData, RecallsData } from "@/app/dbTypes";
+import { RecallData, RecallsData } from "@/app/dbTypes";
 import { groupRecallsByFlashcardId } from "@/app/dbUtils";
 import { getHardestAndLeastTimeRecalls } from "@/app/dbUtils";
 import { Flashcard } from "@/app/dbTypes";
@@ -42,13 +41,15 @@ function setLastFlashcardIfFound(
 export default function FlashcardsStudy(params: {
   flashcards: Array<Flashcard>;
 }) {
+  /**
+   * I only need three veriables
+   * the flashcards
+   * the recalls
+   * and the lastFlashcard (the one that is shown)
+   */
   const [pb, setPb] = React.useState(new Client());
   const [hardestFlashcardId, setHardestFlashcardId] = React.useState("");
   const [lastFlashcard, setLastFlashcard] = React.useState({} as Flashcard);
-  const [flashcardCount, setFlashcardCount] = React.useState(1);
-  const [groupedRecalls, setGroupedRecalls] = React.useState(
-    {} as GroupedRecalls
-  );
   const [recalls, setRecalls] = React.useState([] as RecallsData);
   setLastFlashcardIfFound(
     lastFlashcard,
@@ -58,7 +59,6 @@ export default function FlashcardsStudy(params: {
   );
   console.log("DEBUG FlashcardsStudy lastFlashcard: ", lastFlashcard);
   console.log("DEBUG FlashcardsStudy params.flashcards: ", params.flashcards);
-  console.log("DEBUG FlashcardsStudy groupedRecalls: ", groupedRecalls);
   // updates lastFlashcard from recalls
   const onRecallsUpdate = (newRecalls: Array<RecallData>) => {
     console.log(
@@ -66,7 +66,6 @@ export default function FlashcardsStudy(params: {
       newRecalls
     );
     const groupedRecallsData = groupRecallsByFlashcardId(newRecalls);
-    setGroupedRecalls(groupedRecallsData);
     const hardestRecalls = getHardestAndLeastTimeRecalls(groupedRecallsData);
     if (hardestRecalls.length > 0) {
       const newHardestFlashcardId = hardestRecalls[0].flashcardId;
@@ -103,8 +102,6 @@ export default function FlashcardsStudy(params: {
     promRecalls();
   }, []);
   const next = (data: RecallData) => {
-    // easy goes from 0 to 3
-    setFlashcardCount((prev) => prev + 1);
     console.log("DEBUG FlashcardsStudy next data: ", data);
     sendRecall(
       pb,
@@ -132,7 +129,6 @@ export default function FlashcardsStudy(params: {
   };
   return (
     <main>
-      <FlashcardsCounter count={flashcardCount} />
       <FlashCardHidden
         next={next}
         id={lastFlashcard.id}
