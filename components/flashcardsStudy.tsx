@@ -28,11 +28,7 @@ function setLastFlashcardIfFound(
   flashcards: Array<Flashcard>,
   setLastFlashcard: React.Dispatch<React.SetStateAction<Flashcard>>
 ) {
-  if (
-    lastFlashcard.id === "" &&
-    hardestFlashcardId !== "" &&
-    flashcards.length > 0
-  ) {
+  if (!lastFlashcard.id && hardestFlashcardId !== "" && flashcards.length > 0) {
     const newLastFlashcard = findFlashcardWithId(
       flashcards,
       hardestFlashcardId
@@ -48,11 +44,7 @@ export default function FlashcardsStudy(params: {
 }) {
   const [pb, setPb] = React.useState(new Client());
   const [hardestFlashcardId, setHardestFlashcardId] = React.useState("");
-  const [lastFlashcard, setLastFlashcard] = React.useState({
-    id: "",
-    front: "",
-    back: "",
-  } as Flashcard);
+  const [lastFlashcard, setLastFlashcard] = React.useState({} as Flashcard);
   const [flashcardCount, setFlashcardCount] = React.useState(1);
   const [groupedRecalls, setGroupedRecalls] = React.useState(
     {} as GroupedRecalls
@@ -67,6 +59,7 @@ export default function FlashcardsStudy(params: {
   console.log("DEBUG FlashcardsStudy lastFlashcard: ", lastFlashcard);
   console.log("DEBUG FlashcardsStudy params.flashcards: ", params.flashcards);
   console.log("DEBUG FlashcardsStudy groupedRecalls: ", groupedRecalls);
+  // updates lastFlashcard from recalls
   const onRecallsUpdate = (newRecalls: Array<RecallData>) => {
     console.log(
       "DEBUG FlashcardsStudy onRecallsUpdate newRecalls: ",
@@ -91,6 +84,7 @@ export default function FlashcardsStudy(params: {
       hardestRecalls
     );
   };
+  // get the recalls
   React.useEffect(() => {
     const newPb = login();
     const promRecalls = async () => {

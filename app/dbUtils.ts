@@ -1,7 +1,6 @@
 import {
     RecallsData,
     GroupedRecalls,
-    SortedRecallsByEasyAndTime,
     GroupedRecallItem,
 } from "@/app/dbTypes";
 
@@ -48,8 +47,8 @@ export function groupRecallsByFlashcardId(recalls: RecallsData): GroupedRecalls 
  * flashcard
  * @returns a sorted array of flashcardsIds, the hardest and least time studied.
  */
-export function getHardestAndLeastTimeRecalls(groupedRecalls: GroupedRecalls): SortedRecallsByEasyAndTime {
-    var sortedRecalls: SortedRecallsByEasyAndTime = [];
+export function getHardestAndLeastTimeRecalls(groupedRecalls: GroupedRecalls): Array<GroupedRecallItem> {
+    var sortedRecalls: Array<GroupedRecallItem> = [];
     for (const flashcardId in groupedRecalls) {
         const { totalTime, totalEasy } = groupedRecalls[flashcardId];
         const newItem: GroupedRecallItem = { flashcardId, totalTime, totalEasy };
