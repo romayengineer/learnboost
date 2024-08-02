@@ -22,6 +22,7 @@ export function findFlashcardWithId(
 }
 
 export default function FlashcardsStudy(params: {
+  pb: Client;
   flashcards: Array<Flashcard>;
 }) {
   /**
@@ -30,7 +31,6 @@ export default function FlashcardsStudy(params: {
    * the recalls
    * and the lastFlashcard (the one that is shown)
    */
-  const [pb, setPb] = React.useState(new Client());
   const [lastFlashcard, setLastFlashcard] = React.useState({} as Flashcard);
   const [recalls, setRecalls] = React.useState([] as RecallsData);
   console.log("DEBUG FlashcardsStudy lastFlashcard: ", lastFlashcard);
@@ -78,13 +78,12 @@ export default function FlashcardsStudy(params: {
       "DEBUG FlashcardsStudy useEffect: setting recalls from local ",
       localRecalls
     );
-    setPb(newPb);
     promRecalls();
   }, [params.flashcards.length]);
   const next = (data: RecallData) => {
     console.log("DEBUG FlashcardsStudy next data: ", data);
     sendRecall(
-      pb,
+      params.pb,
       data.flashcardId,
       data.timeFront,
       data.timeBack,
