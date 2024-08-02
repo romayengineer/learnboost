@@ -3,7 +3,7 @@ import React from "react";
 import FlashCardHidden from "@/components/flashcardHidden";
 import { getRecalls, sendRecall } from "@/app/db";
 import Client from "pocketbase";
-import { RecallData, RecallsData } from "@/app/dbTypes";
+import { RecallData } from "@/app/dbTypes";
 import { groupRecallsByFlashcardId } from "@/app/dbUtils";
 import { getHardestAndLeastTimeRecalls } from "@/app/dbUtils";
 import { Flashcard } from "@/app/dbTypes";
@@ -25,25 +25,15 @@ export default function FlashcardsStudy(params: {
   pb: Client;
   flashcards: Array<Flashcard>;
 }) {
-  /**
-   * I only need three veriables
-   * the flashcards
-   * the recalls
-   * and the lastFlashcard (the one that is shown)
-   */
   const [lastFlashcard, setLastFlashcard] = React.useState({} as Flashcard);
-  const [recalls, setRecalls] = React.useState([] as RecallsData);
+  const [_, setRecalls] = React.useState([] as Array<RecallData>);
   console.log("DEBUG FlashcardsStudy lastFlashcard: ", lastFlashcard);
-  console.log("DEBUG FlashcardsStudy params.flashcards: ", params.flashcards);
   // updates lastFlashcard from recalls
   const onRecallsUpdate = (newRecalls: Array<RecallData>) => {
-    console.log(
-      "DEBUG FlashcardsStudy onRecallsUpdate newRecalls: ",
-      newRecalls
-    );
     const groupedRecallsData = groupRecallsByFlashcardId(newRecalls);
     const hardestRecalls = getHardestAndLeastTimeRecalls(groupedRecallsData);
     if (hardestRecalls.length == 0) return;
+    console.log("DEBUG FlashcardsStudy hardestRecalls: ", hardestRecalls);
     const newHardestFlashcardId = hardestRecalls[0].flashcardId;
     const newLastFlashcard = findFlashcardWithId(
       params.flashcards,
@@ -52,10 +42,6 @@ export default function FlashcardsStudy(params: {
     if (newLastFlashcard !== undefined) {
       setLastFlashcard(newLastFlashcard);
     }
-    console.log(
-      "DEBUG FlashcardsStudy onRecallsUpdate hardestRecalls: ",
-      hardestRecalls
-    );
   };
   // get the recalls
   React.useEffect(() => {
@@ -67,18 +53,24 @@ export default function FlashcardsStudy(params: {
     if (params.flashcards.length == 0) return;
     const promRecalls = async () => {
       const _newRecalls = await getRecalls(params.pb);
+      console.log(
+        "DEBUG FlashcardsStudy useEffect: setting recalls from database ",
+        _newRecalls
+      );
       setLocalRecalls(_newRecalls);
       const newRecalls = _newRecalls as Array<unknown> as Array<RecallData>;
       onRecallsUpdate(newRecalls);
       setRecalls(newRecalls);
     };
-    const localRecalls = getLocalRecalls() as unknown as RecallsData;
-    onRecallsUpdate(localRecalls);
-    setRecalls(localRecalls);
-    console.log(
-      "DEBUG FlashcardsStudy useEffect: setting recalls from local ",
-      localRecalls
-    );
+    const localRecalls = getLocalRecalls() as unknown as Array<RecallData>;
+    if (localRecalls.length > 0) {
+      onRecallsUpdate(localRecalls);
+      setRecalls(localRecalls);
+      console.log(
+        "DEBUG FlashcardsStudy useEffect: setting recalls from local ",
+        localRecalls
+      );
+    }
     promRecalls();
   }, [params.flashcards.length]);
   const next = (data: RecallData) => {
