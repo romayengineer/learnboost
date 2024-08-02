@@ -7,7 +7,7 @@ import { RecallData, RecallsData } from "@/app/dbTypes";
 import { groupRecallsByFlashcardId } from "@/app/dbUtils";
 import { getHardestAndLeastTimeRecalls } from "@/app/dbUtils";
 import { Flashcard } from "@/app/dbTypes";
-import { getLocalRecalls } from "@/app/pbLocalStorage";
+import { getLocalRecalls, setLocalRecalls } from "@/app/pbLocalStorage";
 
 export function findFlashcardWithId(
   flashcards: Array<Flashcard>,
@@ -67,7 +67,9 @@ export default function FlashcardsStudy(params: {
     if (params.flashcards.length == 0) return;
     const newPb = login();
     const promRecalls = async () => {
-      const newRecalls = (await getRecalls(newPb)) as unknown as RecallsData;
+      const _newRecalls = await getRecalls(newPb);
+      setLocalRecalls(_newRecalls);
+      const newRecalls = _newRecalls as Array<unknown> as Array<RecallData>;
       onRecallsUpdate(newRecalls);
       setRecalls(newRecalls);
     };
