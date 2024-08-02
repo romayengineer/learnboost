@@ -2,7 +2,7 @@
 import React from "react";
 import FlashCardHidden from "@/components/flashcardHidden";
 import { getRecalls, sendRecall } from "@/app/db";
-import Client from "pocketbase";
+import Client, { RecordModel } from "pocketbase";
 import { RecallData } from "@/app/dbTypes";
 import { groupRecallsByFlashcardId } from "@/app/dbUtils";
 import { getHardestAndLeastTimeRecalls } from "@/app/dbUtils";
@@ -73,27 +73,19 @@ export default function FlashcardsStudy(params: {
     }
     promRecalls();
   }, [params.flashcards.length]);
-  const next = (data: RecallData) => {
-    console.log("DEBUG FlashcardsStudy next data: ", data);
+  const next = (newRecall: RecallData) => {
+    console.log("DEBUG FlashcardsStudy next newRecall: ", newRecall);
     sendRecall(
       params.pb,
-      data.flashcardId,
-      data.timeFront,
-      data.timeBack,
-      data.easy
-    ).catch((error) => {
-      console.log("ERROR FlashcardsStudy next error: ", error);
-      throw error;
-    });
+      newRecall.flashcardId,
+      newRecall.timeFront,
+      newRecall.timeBack,
+      newRecall.easy
+    );
     setRecalls((oldRecalls) => {
-      const newRecall = {
-        easy: data.easy,
-        flashcardId: data.flashcardId,
-        timeFront: data.timeFront,
-        timeBack: data.timeBack,
-      };
       const newRecalls = [...oldRecalls, newRecall];
       onRecallsUpdate(newRecalls);
+      setLocalRecalls(newRecalls as Array<unknown> as Array<RecordModel>);
       return newRecalls;
     });
   };
