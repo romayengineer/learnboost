@@ -22,26 +22,32 @@ export default function MazePage() {
       const awaitedMazes = await getMazes(pb);
       setMazes(awaitedMazes);
       setLocalMazes(awaitedMazes);
-      console.log("DEBUG MazePage useEffect awaitedMazes: ", awaitedMazes);
+      console.log(
+        "DEBUG MazePage useEffect awaitedMazes: ",
+        awaitedMazes.slice()
+      );
     };
     const promRecalls = async () => {
       console.log("DEBUG MazePage promRecalls");
       const awaitedRecalls = await getRecalls(pb);
       setRecalls(awaitedRecalls);
       setLocalRecalls(awaitedRecalls);
-      console.log("DEBUG MazePage useEffect awaitedRecalls: ", awaitedRecalls);
+      console.log(
+        "DEBUG MazePage useEffect awaitedRecalls: ",
+        awaitedRecalls.slice()
+      );
     };
     const localRecalls = getLocalRecalls();
     setRecalls(localRecalls);
     console.log(
       "DEBUG MazePage useEffect: setting recalls from local ",
-      localRecalls
+      localRecalls.slice()
     );
     const localMazes = getLocalMazes();
     setMazes(localMazes);
     console.log(
       "DEBUG MazePage useEffect: setting mazes from local ",
-      localMazes
+      localMazes.slice()
     );
     promMazes();
     promRecalls();

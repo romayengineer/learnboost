@@ -1,8 +1,7 @@
 import {
-    RecallsData,
     GroupedRecalls,
-    SortedRecallsByEasyAndTime,
     GroupedRecallItem,
+    RecallData,
 } from "@/app/dbTypes";
 
 export const getRandomIndex = (arrayData: Array<any>) => {
@@ -20,7 +19,7 @@ export const getRandomIndex = (arrayData: Array<any>) => {
  * @returns a map of flashcardId to an object with the totalTime and the
  * TotalEasy
  */
-export function groupRecallsByFlashcardId(recalls: RecallsData): GroupedRecalls {
+export function groupRecallsByFlashcardId(recalls: Array<RecallData>): GroupedRecalls {
     var groupedRecalls: GroupedRecalls = {};
     recalls.forEach((recall) => {
         const prevVal = groupedRecalls[recall.flashcardId] || {};
@@ -48,15 +47,23 @@ export function groupRecallsByFlashcardId(recalls: RecallsData): GroupedRecalls 
  * flashcard
  * @returns a sorted array of flashcardsIds, the hardest and least time studied.
  */
-export function getHardestAndLeastTimeRecalls(groupedRecalls: GroupedRecalls): SortedRecallsByEasyAndTime {
-    var sortedRecalls: SortedRecallsByEasyAndTime = [];
+export function getHardestAndLeastTimeRecalls(groupedRecalls: GroupedRecalls): Array<GroupedRecallItem> {
+    var sortedRecalls: Array<GroupedRecallItem> = [];
+    var lowestEasy: number = Infinity;
+    for (const flashcardId in groupedRecalls) {
+        const { totalEasy } = groupedRecalls[flashcardId];
+        if (!lowestEasy || totalEasy < lowestEasy) lowestEasy = totalEasy;
+    }
+    // console.log("DEBUG getHardestAndLeastTimeRecalls lowestEasy 1: ", lowestEasy);
     for (const flashcardId in groupedRecalls) {
         const { totalTime, totalEasy } = groupedRecalls[flashcardId];
+        if (totalEasy !== lowestEasy) continue;
         const newItem: GroupedRecallItem = { flashcardId, totalTime, totalEasy };
-        sortedRecalls.push(newItem)
+        sortedRecalls.push(newItem);
     }
-    sortedRecalls.sort((r1, r2) => r1.totalEasy - r2.totalEasy);
-    sortedRecalls = sortedRecalls.slice(0, 5);
+    // console.log("DEBUG getHardestAndLeastTimeRecalls sortedRecalls 1: ", sortedRecalls.slice());
+    if (sortedRecalls.length < 2) return sortedRecalls;
     sortedRecalls.sort((r1, r2) => r1.totalTime - r2.totalTime);
+    // console.log("DEBUG getHardestAndLeastTimeRecalls sortedRecalls 2: ", sortedRecalls.slice());
     return sortedRecalls;
 }

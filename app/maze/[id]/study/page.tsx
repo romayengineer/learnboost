@@ -1,32 +1,37 @@
 "use client";
 import { login, getFlashcards } from "@/app/db";
-import { useState, useEffect } from "react";
+import React from "react";
 import { Flashcard } from "@/app/dbTypes";
 import FlashcardsStudy from "@/components/flashcardsStudy";
+import { setLocalFlashcards, getLocalFlashcards } from "@/app/pbLocalStorage";
+import Client from "pocketbase";
 
 export default function StudyMazeID({ params }: { params: { id: string } }) {
   let mazeId = params.id;
-  const [flashcards, setFlashcards] = useState([] as Array<Flashcard>);
-  useEffect(() => {
+  const [pb, setPb] = React.useState(new Client());
+  const [flashcards, setFlashcards] = React.useState([] as Array<Flashcard>);
+  React.useEffect(() => {
     let pb = login();
     const promFlashcards = async () => {
-      let flashcardsData = (await getFlashcards(
-        pb,
-        mazeId
-      )) as unknown as Array<{
-        id: string;
-        front: string;
-        back: string;
-      }>;
+      const awaitedFlashcards = await getFlashcards(pb, mazeId);
+      const flashcardsData = awaitedFlashcards as unknown as Array<Flashcard>;
       setFlashcards(flashcardsData);
-      console.log("DEBUG StudyMazeID flashcardsData: ", flashcardsData);
+      setLocalFlashcards(awaitedFlashcards);
+      console.log("DEBUG StudyMazeID flashcardsData: ", flashcardsData.slice());
     };
+    setPb(pb);
+    const localFlashcards = getLocalFlashcards() as unknown as Array<Flashcard>;
+    setFlashcards(localFlashcards);
+    console.log(
+      "DEBUG StudyMazeID useEffect: setting flashcards from local ",
+      localFlashcards.slice()
+    );
     promFlashcards();
   }, [mazeId]);
   return (
     <main>
       <div className="flex flex-row justify-center items-center">
-        <FlashcardsStudy flashcards={flashcards} />
+        <FlashcardsStudy pb={pb} flashcards={flashcards} />
       </div>
     </main>
   );

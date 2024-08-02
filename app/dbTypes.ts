@@ -25,7 +25,3 @@ export type RecallData = {
     timeBack: number;
     easy: number;
 };
-
-export type RecallsData = Array<RecallData>;
-
-export type SortedRecallsByEasyAndTime = Array<GroupedRecallItem>;

@@ -1,13 +1,13 @@
 "use client";
 import React from "react";
 import FlashCardHidden from "@/components/flashcardHidden";
-import FlashcardsCounter from "./flashcardsCounter";
-import { getRecalls, login, sendRecall } from "@/app/db";
-import Client from "pocketbase";
-import { GroupedRecalls, RecallData, RecallsData } from "@/app/dbTypes";
+import { getRecalls, sendRecall } from "@/app/db";
+import Client, { RecordModel } from "pocketbase";
+import { RecallData } from "@/app/dbTypes";
 import { groupRecallsByFlashcardId } from "@/app/dbUtils";
 import { getHardestAndLeastTimeRecalls } from "@/app/dbUtils";
 import { Flashcard } from "@/app/dbTypes";
+import { getLocalRecalls, setLocalRecalls } from "@/app/pbLocalStorage";
 
 export function findFlashcardWithId(
   flashcards: Array<Flashcard>,
@@ -16,111 +16,84 @@ export function findFlashcardWithId(
   for (const arrayIndex in flashcards) {
     var flashcardData = flashcards[arrayIndex];
     if (flashcardData.id === flashcardId) {
-      console.log("DEBUG findFlashcardWithId found: ", true);
       return flashcardData;
     }
   }
-  console.log("DEBUG findFlashcardWithId found: ", false);
-  console.log("DEBUG findFlashcardWithId flashcards: ", flashcards);
-  console.log("DEBUG findFlashcardWithId flashcardId: ", flashcardId);
 }
 
 export default function FlashcardsStudy(params: {
+  pb: Client;
   flashcards: Array<Flashcard>;
 }) {
-  const [pb, setPb] = React.useState(new Client());
-  const [hardestFlashcardId, setHardestFlashcardId] = React.useState("");
-  const [lastFlashcard, setLastFlashcard] = React.useState({
-    id: "",
-    front: "",
-    back: "",
-  } as Flashcard);
-  const [flashcardCount, setFlashcardCount] = React.useState(1);
-  const [groupedRecalls, setGroupedRecalls] = React.useState(
-    {} as GroupedRecalls
-  );
-  const [recalls, setRecalls] = React.useState([] as RecallsData);
-  if (
-    lastFlashcard.id === "" &&
-    hardestFlashcardId !== "" &&
-    params.flashcards.length > 0
-  ) {
+  const [lastFlashcard, setLastFlashcard] = React.useState({} as Flashcard);
+  const [_, setRecalls] = React.useState([] as Array<RecallData>);
+  console.log("DEBUG FlashcardsStudy lastFlashcard: ", lastFlashcard);
+  // updates lastFlashcard from recalls
+  const onRecallsUpdate = (newRecalls: Array<RecallData>) => {
+    const groupedRecallsData = groupRecallsByFlashcardId(newRecalls);
+    const hardestRecalls = getHardestAndLeastTimeRecalls(groupedRecallsData);
+    if (hardestRecalls.length == 0) return;
+    console.log(
+      "DEBUG FlashcardsStudy hardestRecalls: ",
+      hardestRecalls.slice()
+    );
+    const newHardestFlashcardId = hardestRecalls[0].flashcardId;
     const newLastFlashcard = findFlashcardWithId(
       params.flashcards,
-      hardestFlashcardId
+      newHardestFlashcardId
     );
     if (newLastFlashcard !== undefined) {
       setLastFlashcard(newLastFlashcard);
     }
-  }
-  console.log("DEBUG FlashcardsStudy lastFlashcard: ", lastFlashcard);
-  console.log("DEBUG FlashcardsStudy params.flashcards: ", params.flashcards);
-  console.log("DEBUG FlashcardsStudy groupedRecalls: ", groupedRecalls);
-  const onRecallsUpdate = (newRecalls: Array<RecallData>) => {
-    console.log(
-      "DEBUG FlashcardsStudy onRecallsUpdate newRecalls: ",
-      newRecalls
-    );
-    const groupedRecallsData = groupRecallsByFlashcardId(newRecalls);
-    setGroupedRecalls(groupedRecallsData);
-    const hardestRecalls = getHardestAndLeastTimeRecalls(groupedRecallsData);
-    if (hardestRecalls.length > 0) {
-      const newHardestFlashcardId = hardestRecalls[0].flashcardId;
-      setHardestFlashcardId(newHardestFlashcardId);
-      const newLastFlashcard = findFlashcardWithId(
-        params.flashcards,
-        newHardestFlashcardId
-      );
-      if (newLastFlashcard !== undefined) {
-        setLastFlashcard(newLastFlashcard);
-      }
-    }
-    console.log(
-      "DEBUG FlashcardsStudy onRecallsUpdate hardestRecalls: ",
-      hardestRecalls
-    );
   };
-  React.useEffect(() => {
-    const newPb = login();
+  const onUpdateRecallsSet = (newRecalls: Array<RecallData>, from: string) => {
+    if (newRecalls.length < 1) return;
+    console.log(
+      "DEBUG FlashcardsStudy useEffect: setting recalls from ",
+      from,
+      newRecalls.slice()
+    );
+    onRecallsUpdate(newRecalls);
+    setRecalls(newRecalls);
+  };
+  const loadRecallsAndUpdateLocal = () => {
+    /**
+     * We need to set the lastFlashcards and for that we need
+     * to have the flashcards Array if not there is no need to get the recalls
+     * as having no flashcards the lastFlashcards will be null
+     */
+    if (params.flashcards.length == 0) return;
     const promRecalls = async () => {
-      const newRecalls = (await getRecalls(newPb)) as unknown as RecallsData;
-      onRecallsUpdate(newRecalls);
-      setRecalls(newRecalls);
+      const newRecalls = await getRecalls(params.pb);
+      setLocalRecalls(newRecalls);
+      onUpdateRecallsSet(
+        newRecalls as Array<unknown> as Array<RecallData>,
+        "Database"
+      );
     };
-    setPb(newPb);
+    const localRecalls = getLocalRecalls() as unknown as Array<RecallData>;
+    onUpdateRecallsSet(localRecalls, "LocalStorage");
     promRecalls();
-  }, []);
-  const next = (data: RecallData) => {
-    // easy goes from 0 to 3
-    setFlashcardCount((prev) => prev + 1);
-    console.log("DEBUG FlashcardsStudy next data: ", data);
+  };
+  React.useEffect(loadRecallsAndUpdateLocal, [params.flashcards.length]);
+  const next = (newRecall: RecallData) => {
+    console.log("DEBUG FlashcardsStudy next newRecall: ", newRecall);
     sendRecall(
-      pb,
-      data.flashcardId,
-      data.timeFront,
-      data.timeBack,
-      data.easy
-    ).catch((error) => {
-      console.log("ERROR FlashcardsStudy next error: ", error);
-      throw error;
-    });
+      params.pb,
+      newRecall.flashcardId,
+      newRecall.timeFront,
+      newRecall.timeBack,
+      newRecall.easy
+    );
     setRecalls((oldRecalls) => {
-      const newRecalls: Array<RecallData> = [
-        ...oldRecalls,
-        {
-          easy: data.easy,
-          flashcardId: data.flashcardId,
-          timeFront: data.timeFront,
-          timeBack: data.timeBack,
-        },
-      ];
+      const newRecalls = [...oldRecalls, newRecall];
       onRecallsUpdate(newRecalls);
+      setLocalRecalls(newRecalls as Array<unknown> as Array<RecordModel>);
       return newRecalls;
     });
   };
   return (
     <main>
-      <FlashcardsCounter count={flashcardCount} />
       <FlashCardHidden
         next={next}
         id={lastFlashcard.id}
