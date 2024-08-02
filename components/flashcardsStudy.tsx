@@ -53,8 +53,7 @@ export default function FlashcardsStudy(params: {
     onRecallsUpdate(newRecalls);
     setRecalls(newRecalls);
   };
-  // get the recalls
-  React.useEffect(() => {
+  const loadRecallsAndUpdateLocal = () => {
     /**
      * We need to set the lastFlashcards and for that we need
      * to have the flashcards Array if not there is no need to get the recalls
@@ -72,7 +71,8 @@ export default function FlashcardsStudy(params: {
     const localRecalls = getLocalRecalls() as unknown as Array<RecallData>;
     onUpdateRecallsSet(localRecalls, "LocalStorage");
     promRecalls();
-  }, [params.flashcards.length]);
+  };
+  React.useEffect(loadRecallsAndUpdateLocal, [params.flashcards.length]);
   const next = (newRecall: RecallData) => {
     console.log("DEBUG FlashcardsStudy next newRecall: ", newRecall);
     sendRecall(
