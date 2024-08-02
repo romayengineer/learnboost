@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import FlashCardHidden from "@/components/flashcardHidden";
-import { getRecalls, login, sendRecall } from "@/app/db";
+import { getRecalls, sendRecall } from "@/app/db";
 import Client from "pocketbase";
 import { RecallData, RecallsData } from "@/app/dbTypes";
 import { groupRecallsByFlashcardId } from "@/app/dbUtils";
@@ -65,9 +65,8 @@ export default function FlashcardsStudy(params: {
      * as having no flashcards the lastFlashcards will be null
      */
     if (params.flashcards.length == 0) return;
-    const newPb = login();
     const promRecalls = async () => {
-      const _newRecalls = await getRecalls(newPb);
+      const _newRecalls = await getRecalls(params.pb);
       setLocalRecalls(_newRecalls);
       const newRecalls = _newRecalls as Array<unknown> as Array<RecallData>;
       onRecallsUpdate(newRecalls);
