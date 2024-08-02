@@ -36,13 +36,13 @@ export default function MazeID({ params }: { params: { id: string } }) {
       const flashcardsData = awaitedFlashcards as unknown as Array<Flashcard>;
       setFlashcards(flashcardsData);
       setLocalFlashcards(awaitedFlashcards);
-      console.log("DEBUG MazeID flashcardsData: ", flashcardsData);
+      console.log("DEBUG MazeID flashcardsData: ", flashcardsData.slice());
     };
     const localFlashcards = getLocalFlashcards() as unknown as Array<Flashcard>;
     setFlashcards(localFlashcards);
     console.log(
       "DEBUG MazeID useEffect: setting flashcards from local ",
-      localFlashcards
+      localFlashcards.slice()
     );
     const localMaze = getLocalMaze(mazeId);
     if (localMaze.length === 1) {

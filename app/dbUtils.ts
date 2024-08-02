@@ -54,16 +54,16 @@ export function getHardestAndLeastTimeRecalls(groupedRecalls: GroupedRecalls): A
         const { totalEasy } = groupedRecalls[flashcardId];
         if (!lowestEasy || totalEasy < lowestEasy) lowestEasy = totalEasy;
     }
-    console.log("DEBUG getHardestAndLeastTimeRecalls lowestEasy 1: ", lowestEasy);
+    // console.log("DEBUG getHardestAndLeastTimeRecalls lowestEasy 1: ", lowestEasy);
     for (const flashcardId in groupedRecalls) {
         const { totalTime, totalEasy } = groupedRecalls[flashcardId];
         if (totalEasy !== lowestEasy) continue;
         const newItem: GroupedRecallItem = { flashcardId, totalTime, totalEasy };
         sortedRecalls.push(newItem);
     }
-    console.log("DEBUG getHardestAndLeastTimeRecalls sortedRecalls 1: ", sortedRecalls);
+    // console.log("DEBUG getHardestAndLeastTimeRecalls sortedRecalls 1: ", sortedRecalls.slice());
     if (sortedRecalls.length < 2) return sortedRecalls;
     sortedRecalls.sort((r1, r2) => r1.totalTime - r2.totalTime);
-    console.log("DEBUG getHardestAndLeastTimeRecalls sortedRecalls 2: ", sortedRecalls);
+    // console.log("DEBUG getHardestAndLeastTimeRecalls sortedRecalls 2: ", sortedRecalls.slice());
     return sortedRecalls;
 }

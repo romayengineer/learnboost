@@ -17,14 +17,14 @@ export default function StudyMazeID({ params }: { params: { id: string } }) {
       const flashcardsData = awaitedFlashcards as unknown as Array<Flashcard>;
       setFlashcards(flashcardsData);
       setLocalFlashcards(awaitedFlashcards);
-      console.log("DEBUG StudyMazeID flashcardsData: ", flashcardsData);
+      console.log("DEBUG StudyMazeID flashcardsData: ", flashcardsData.slice());
     };
     setPb(pb);
     const localFlashcards = getLocalFlashcards() as unknown as Array<Flashcard>;
     setFlashcards(localFlashcards);
     console.log(
       "DEBUG StudyMazeID useEffect: setting flashcards from local ",
-      localFlashcards
+      localFlashcards.slice()
     );
     promFlashcards();
   }, [mazeId]);

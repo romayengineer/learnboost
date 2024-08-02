@@ -33,7 +33,10 @@ export default function FlashcardsStudy(params: {
     const groupedRecallsData = groupRecallsByFlashcardId(newRecalls);
     const hardestRecalls = getHardestAndLeastTimeRecalls(groupedRecallsData);
     if (hardestRecalls.length == 0) return;
-    console.log("DEBUG FlashcardsStudy hardestRecalls: ", hardestRecalls);
+    console.log(
+      "DEBUG FlashcardsStudy hardestRecalls: ",
+      hardestRecalls.slice()
+    );
     const newHardestFlashcardId = hardestRecalls[0].flashcardId;
     const newLastFlashcard = findFlashcardWithId(
       params.flashcards,
@@ -48,7 +51,7 @@ export default function FlashcardsStudy(params: {
     console.log(
       "DEBUG FlashcardsStudy useEffect: setting recalls from ",
       from,
-      newRecalls
+      newRecalls.slice()
     );
     onRecallsUpdate(newRecalls);
     setRecalls(newRecalls);
