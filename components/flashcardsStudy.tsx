@@ -46,7 +46,7 @@ export default function FlashcardsStudy(params: {
       setLastFlashcard(newLastFlashcard);
     }
   };
-  const onUpdateRecallsSet = (newRecalls: Array<RecallData>, from: string) => {
+  const onUpdateSetRecalls = (newRecalls: Array<RecallData>, from: string) => {
     if (newRecalls.length < 1) return;
     console.log(
       "DEBUG FlashcardsStudy useEffect: setting recalls from ",
@@ -66,13 +66,13 @@ export default function FlashcardsStudy(params: {
     const promRecalls = async () => {
       const newRecalls = await getRecalls(params.pb);
       setLocalRecalls(newRecalls);
-      onUpdateRecallsSet(
+      onUpdateSetRecalls(
         newRecalls as Array<unknown> as Array<RecallData>,
         "Database"
       );
     };
     const localRecalls = getLocalRecalls() as unknown as Array<RecallData>;
-    onUpdateRecallsSet(localRecalls, "LocalStorage");
+    onUpdateSetRecalls(localRecalls, "LocalStorage");
     promRecalls();
   };
   React.useEffect(loadRecallsAndUpdateLocal, [params.flashcards.length]);
