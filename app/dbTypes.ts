@@ -1,9 +1,13 @@
 
-
 export type Flashcard = {
     id: string;
     front: string;
     back: string;
+};
+
+export type Config = {
+    name: string;
+    value: string;
 };
 
 export type GroupedRecalls = {
