@@ -1,4 +1,5 @@
 import { RecordModel } from "pocketbase";
+import { Config } from "./dbTypes";
 
 type StringMap = {
     [key: string]: string
@@ -8,6 +9,7 @@ const models: StringMap = {
     recalls: "recalls",
     mazes: "mazes",
     flashcards: "flashcards",
+    config: "config",
 }
 
 function setLocal(modelName: string, arrayData: Array<any>) {
@@ -39,6 +41,14 @@ export function setLocalMazes(mazes: Array<RecordModel>) {
 
 export function setLocalFlashcards(flashcards: Array<RecordModel>) {
     setLocal(models.flashcards, flashcards);
+}
+
+export function setLocalConfig(config: Array<Config>) {
+    setLocal(models.config, config);
+}
+
+export function getLocalConfig(): Array<Config> {
+    return getLocal(models.config) as unknown as Array<Config>;
 }
 
 export function getLocalRecalls(): Array<RecordModel> {

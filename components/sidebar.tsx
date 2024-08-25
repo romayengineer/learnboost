@@ -1,7 +1,9 @@
 import React from "react";
+import { setLocalConfig, getLocalConfig } from "@/app/pbLocalStorage";
+import { Config } from "@/app/dbTypes";
 
 export default function SideBar() {
-  const [showSidebar, setShowSidebar] = React.useState(true);
+  const [showSidebar, setShowSidebar] = React.useState(false);
   var button_arrows = "";
   var style = {};
   if (showSidebar) {
@@ -10,6 +12,25 @@ export default function SideBar() {
     button_arrows = ">>";
     style = { "margin-left": "-210px" };
   }
+  React.useEffect(() => {
+    const localConfig = getLocalConfig();
+    const bySidebarShow = (c: Config) =>
+      c.name == "sidebar" && c.value == "show";
+    const newShowSidebar = localConfig.filter(bySidebarShow).length > 0;
+    setShowSidebar(newShowSidebar);
+  }, []);
+  const toggleSidebar = () => {
+    setShowSidebar((prev) => {
+      const newVal = !prev;
+      setLocalConfig([
+        {
+          name: "sidebar",
+          value: newVal ? "show" : "hide",
+        },
+      ]);
+      return newVal;
+    });
+  };
   const navBar = (
     <>
       <a href="/reports">
@@ -104,10 +125,7 @@ export default function SideBar() {
     <div className="float-left mr-10" style={style}>
       <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 h-[calc(100vh-2rem)] w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5">
         <div>
-          <button
-            onClick={() => setShowSidebar((prev) => !prev)}
-            className="float-right border-2 w-8"
-          >
+          <button onClick={toggleSidebar} className="float-right border-2 w-8">
             {button_arrows}
           </button>
         </div>
